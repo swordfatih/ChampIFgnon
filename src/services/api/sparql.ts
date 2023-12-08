@@ -1,6 +1,6 @@
-import { Generator, type SelectQuery } from "sparqljs";
+import { Generator, Parser, type SelectQuery, type Triple } from "sparqljs";
 
-import { type SparRequest } from "@/types/sparql";
+import type { SparLangFilter, SparRequest, SparTriple } from "@/types/sparql";
 
 export const template: SelectQuery = {
   queryType: "SELECT",
@@ -20,8 +20,49 @@ export const template: SelectQuery = {
   type: "query",
 };
 
+function formatTriples(vars: string[], triples?: SparTriple[]): Triple[] {
+  if (triples === undefined) {
+    return [];
+  }
+
+  return triples.map((triple) => ({
+    subject: {
+      termType: vars.includes(triple[0]) ? "Variable" : "NamedNode",
+      value: triple[0],
+      equals: () => true,
+    },
+    predicate: {
+      termType: vars.includes(triple[1]) ? "Variable" : "NamedNode",
+      value: triple[1],
+      equals: () => true,
+    },
+    object: {
+      termType: vars.includes(triple[2]) ? "Variable" : "NamedNode",
+      value: triple[2],
+      equals: () => true,
+    },
+  }));
+}
+
 // format(['p'], [['p', 'rdf:type', 'dbo:Films']])
-export function format({ vars, triples, offset, limit, order }: SparRequest) {
+export function format({
+  vars,
+  triples,
+  offset,
+  limit,
+  order,
+  optionals,
+  langFilters,
+}: SparRequest) {
+  const parser = new Parser();
+  console.log("PARSED");
+  console.log(
+    parser.parse(
+      "PREFIX foaf: <http://xmlns.com/foaf/0.1/> " +
+        'SELECT * { ?mickey foaf:name "Mickey Mouse"@en; foaf:knows ?other. FILTER(lang(?other) = "en")}'
+    )
+  );
+
   const generator = new Generator({});
 
   const request = template;
@@ -50,25 +91,52 @@ export function format({ vars, triples, offset, limit, order }: SparRequest) {
   request.where = [
     {
       type: "bgp",
-      triples: triples.map((triple) => ({
-        subject: {
-          termType: vars.includes(triple[0]) ? "Variable" : "NamedNode",
-          value: triple[0],
-          equals: () => true,
+      triples: formatTriples(vars, triples),
+    },
+    {
+      type: "optional",
+      patterns: [
+        {
+          type: "bgp",
+          triples: formatTriples(vars, optionals),
         },
-        predicate: {
-          termType: vars.includes(triple[1]) ? "Variable" : "NamedNode",
-          value: triple[1],
-          equals: () => true,
-        },
-        object: {
-          termType: vars.includes(triple[2]) ? "Variable" : "NamedNode",
-          value: triple[2],
-          equals: () => true,
-        },
-      })),
+      ],
     },
   ];
+
+  langFilters?.forEach(({ value, lang }: SparLangFilter) => {
+    request.where?.push({
+      type: "filter",
+      expression: {
+        type: "operation",
+        operator: "=",
+        args: [
+          {
+            type: "operation",
+            operator: "lang",
+            args: [
+              {
+                termType: "Variable",
+                value,
+                equals: () => true,
+              },
+            ],
+          },
+          {
+            termType: "Literal",
+            value: lang,
+            language: "",
+            datatype: {
+              termType: "NamedNode",
+              value: "http://www.w3.org/2001/XMLSchema#string",
+              equals: () => true,
+            },
+            equals: () => true,
+          },
+        ],
+      },
+    });
+  });
 
   return generator.stringify(request).replace(/</g, "").replace(/>/g, "");
 }

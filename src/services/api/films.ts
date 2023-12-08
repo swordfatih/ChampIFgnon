@@ -1,4 +1,4 @@
-import dbpedia from "@/services/api/axios";
+import api from "@/services/api/axios";
 import { format } from "@/services/api/sparql";
 import { useQuery } from "react-query";
 
@@ -11,7 +11,7 @@ async function findFilms() {
     limit: 100,
   });
 
-  const { data } = await dbpedia.get<SparResponse>("sparql", {
+  const { data } = await api.dbpedia.get<SparResponse>("sparql", {
     params: {
       query,
     },

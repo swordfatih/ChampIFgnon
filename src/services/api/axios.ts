@@ -15,4 +15,14 @@ dbpedia.interceptors.request.use((config) => {
   return config;
 });
 
-export default dbpedia;
+const wikidata = axios.create({
+  baseURL: "	https://query.wikidata.org",
+  headers: {
+    "Content-Type": "application/sparql-results+json",
+  },
+});
+
+export default {
+  dbpedia,
+  wikidata,
+};

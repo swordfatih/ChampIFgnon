@@ -2,6 +2,7 @@ import "@/styles/layout.css";
 
 import React, { useEffect } from "react";
 import { useFindFilms } from "@/services/api/films";
+import { useFindGames } from "@/services/api/games";
 import {
   Clipboard,
   FlameKindling,
@@ -16,7 +17,12 @@ export default function Home() {
   const cardsRef = React.useRef<HTMLAnchorElement[]>([]);
   const cardWrapperRef = React.useRef<HTMLDivElement>(null);
 
-  const { data } = useFindFilms();
+  const { data: films } = useFindFilms();
+  const {
+    data: games,
+    isLoading: gamesLoading,
+    isError: gamesError,
+  } = useFindGames();
 
   React.useEffect(() => {
     cardWrapperRef.current!.onmousemove = (e) => {
@@ -32,8 +38,8 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    console.log(data);
-  }, [data]);
+    console.log(games);
+  }, [games]);
 
   return (
     <main className="layout w-full bg-black bg-fixed text-white selection:bg-white selection:text-black">
@@ -109,29 +115,35 @@ export default function Home() {
 
       <section ref={featuresRef} className="container mt-10">
         <h2 className="mb-6 bg-gradient-to-r from-white to-gray-500 bg-clip-text text-center text-xl font-bold tracking-tighter text-transparent sm:text-3xl xl:text-4xl">
-          Films
+          Jeux
         </h2>
 
         <div
           ref={cardWrapperRef}
           className="cards grid gap-3 md:grid-cols-2 md:gap-6 lg:grid-cols-3"
         >
-          {data?.results.bindings.map((f, i) => (
+          {gamesLoading && <div>Chargement...</div>}
+          {gamesError && <div>Erreur !</div>}
+          {games?.results.bindings.map((game, i) => (
             <a
               key={i}
               ref={(el) => (cardsRef.current![i] = el!)}
-              href={f.p.value}
+              href={game.item.value}
               target="_blank"
               rel="noopener noreferrer"
               className="card group relative h-48 w-full rounded-xl bg-zinc-700 shadow-md shadow-black outline-none before:absolute before:left-0 before:top-0 before:h-full before:w-full before:rounded-xl before:opacity-0 before:transition-opacity before:duration-500 after:absolute after:left-0 after:top-0 after:h-full after:w-full after:rounded-xl after:opacity-0 after:transition-opacity after:duration-500 hover:shadow-xl hover:shadow-black hover:before:opacity-100"
             >
               <div className="absolute inset-[1px] z-[2] flex flex-col gap-2.5 rounded-xl bg-[#141414] p-2.5">
                 <div className="relative h-full w-full overflow-hidden rounded-md p-4">
-                  {/* <div className="mb-3.5 h-14 w-14">{<f.logo />}</div> */}
+                  {game.logo && (
+                    <div className="mb-3.5 h-14 w-14">
+                      <img src={game.logo.value} />
+                    </div>
+                  )}
 
                   <h3 className="text-xl">
                     <div className="flex h-full w-full items-center after:absolute after:inset-0">
-                      {f.p.value}
+                      {game.name.value}
 
                       <MoveUpRight
                         strokeWidth={0.75}
@@ -141,7 +153,7 @@ export default function Home() {
                   </h3>
 
                   <p className="mt-2 text-sm text-gray-300 group-hover:text-white">
-                    {/* {f.description} */}
+                    {game.description.value}
                   </p>
                 </div>
               </div>
