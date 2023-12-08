@@ -1,8 +1,10 @@
+import Home from "@/routes/home";
+import queryClient from "@/services/react-query";
+import { QueryClientProvider } from "react-query";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import Error from "./components/error";
-import RootLayout from "./components/root-layout";
-import Home from "./routes/home";
+import Error from "@/components/error";
+import RootLayout from "@/components/root-layout";
 
 const router = createBrowserRouter([
   {
@@ -18,5 +20,9 @@ const router = createBrowserRouter([
 ]);
 
 export default function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
+  );
 }
