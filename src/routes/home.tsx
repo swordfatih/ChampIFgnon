@@ -1,13 +1,8 @@
 import "@/styles/layout.css";
 
 import React, { useEffect, useState } from "react";
-import {
-  FlameKindling,
-  Github,
-  Mouse,
-  MoveUpRight,
-} from "lucide-react";
 import { useSearchGames } from "@/services/api/games";
+import { FlameKindling, Github, Mouse, MoveUpRight } from "lucide-react";
 
 export default function Home() {
   const [searchText, setSearchText] = useState("");
@@ -61,11 +56,15 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="w-1/2 relative mx-auto max-w-xs rounded-xl border border-zinc-700 p-1 text-zinc-200 shadow-md duration-300 hover:shadow-black sm:max-w-full">
+            <div className="relative mx-auto w-1/2 max-w-xs rounded-xl border border-zinc-700 p-1 text-zinc-200 shadow-md duration-300 hover:shadow-black sm:max-w-full">
               <p className="flex w-full cursor-pointer items-center gap-2 rounded-md bg-white/5 px-2 py-3 font-mono hover:bg-white/10">
                 <span className="text-orange-500">$</span>
 
-                <input className="w-full truncate bg-transparent" value={searchText} onChange={(e)=>setSearchText(e.target.value)}/>
+                <input
+                  className="w-full truncate bg-transparent"
+                  value={searchText}
+                  onChange={(e) => setSearchText(e.target.value)}
+                />
               </p>
             </div>
 
