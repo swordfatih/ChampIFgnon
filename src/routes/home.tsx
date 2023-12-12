@@ -2,19 +2,27 @@ import "@/styles/layout.css";
 
 import React, { useEffect, useState } from "react";
 import { useSearchGames } from "@/services/api/games";
-import { FlameKindling, Github, Mouse, MoveUpRight } from "lucide-react";
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  FlameKindling,
+  Github,
+  Mouse,
+  MoveUpRight,
+} from "lucide-react";
 
 export default function Home() {
   const [searchText, setSearchText] = useState("");
   const featuresRef = React.useRef<HTMLDivElement>(null);
   const cardsRef = React.useRef<HTMLAnchorElement[]>([]);
   const cardWrapperRef = React.useRef<HTMLDivElement>(null);
+  const [offset, setOffset] = useState(0);
 
   const {
     data: games,
     isLoading: gamesLoading,
     isError: gamesError,
-  } = useSearchGames(searchText);
+  } = useSearchGames(searchText, offset);
 
   React.useEffect(() => {
     cardWrapperRef.current!.onmousemove = (e) => {
@@ -146,6 +154,27 @@ export default function Home() {
               </div>
             </a>
           ))}
+        </div>
+
+        <div className="mt-12 flex items-center justify-center gap-12">
+          <button
+            className="flex animate-bounce justify-center text-zinc-600 duration-150 hover:text-white"
+            onClick={() => {
+              if (offset <= 0) {
+                setOffset(0);
+              } else {
+                setOffset(offset - 12);
+              }
+            }}
+          >
+            <ArrowLeftIcon strokeWidth={1} className="h-10 w-10" />
+          </button>
+          <button
+            className="flex animate-bounce justify-center text-zinc-600 duration-150 hover:text-white"
+            onClick={() => setOffset(offset + 12)}
+          >
+            <ArrowRightIcon strokeWidth={1} className="h-10 w-10" />
+          </button>
         </div>
       </section>
 
