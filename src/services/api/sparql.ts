@@ -1,6 +1,11 @@
-import { Generator, Parser, type SelectQuery, type Triple } from "sparqljs";
+import { Generator, type SelectQuery, type Triple } from "sparqljs";
 
-import type { SparLangFilter, SparRequest, SparTriple } from "@/types/sparql";
+import type {
+  SparLangFilter,
+  SparRequest,
+  SparTextFilter,
+  SparTriple,
+} from "@/types/sparql";
 
 export const template: SelectQuery = {
   queryType: "SELECT",
@@ -53,16 +58,8 @@ export function format({
   order,
   optionals,
   langFilters,
+  textFilters,
 }: SparRequest) {
-  const parser = new Parser();
-  console.log("PARSED");
-  console.log(
-    parser.parse(
-      "PREFIX foaf: <http://xmlns.com/foaf/0.1/> " +
-        'SELECT * { ?mickey foaf:name "Mickey Mouse"@en; foaf:knows ?other. FILTER(lang(?other) = "en")}'
-    )
-  );
-
   const generator = new Generator({});
 
   const request = template;
@@ -125,6 +122,45 @@ export function format({
           {
             termType: "Literal",
             value: lang,
+            language: "",
+            datatype: {
+              termType: "NamedNode",
+              value: "http://www.w3.org/2001/XMLSchema#string",
+              equals: () => true,
+            },
+            equals: () => true,
+          },
+        ],
+      },
+    });
+  });
+
+  textFilters?.forEach(({ value, filter, attributes }: SparTextFilter) => {
+    request.where?.push({
+      type: "filter",
+      expression: {
+        type: "operation",
+        operator: "regex",
+        args: [
+          {
+            termType: "Variable",
+            value,
+            equals: () => true,
+          },
+          {
+            termType: "Literal",
+            value: filter,
+            language: "",
+            datatype: {
+              termType: "NamedNode",
+              value: "http://www.w3.org/2001/XMLSchema#string",
+              equals: () => true,
+            },
+            equals: () => true,
+          },
+          {
+            termType: "Literal",
+            value: attributes,
             language: "",
             datatype: {
               termType: "NamedNode",

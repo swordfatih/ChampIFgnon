@@ -1,8 +1,7 @@
 import "@/styles/layout.css";
 
 import React, { useEffect } from "react";
-import { useFindFilms } from "@/services/api/films";
-import { useFindGames } from "@/services/api/games";
+import { useSearchGames } from "@/services/api/games";
 import {
   Clipboard,
   FlameKindling,
@@ -17,12 +16,11 @@ export default function Home() {
   const cardsRef = React.useRef<HTMLAnchorElement[]>([]);
   const cardWrapperRef = React.useRef<HTMLDivElement>(null);
 
-  const { data: films } = useFindFilms();
   const {
     data: games,
     isLoading: gamesLoading,
     isError: gamesError,
-  } = useFindGames();
+  } = useSearchGames("Civilization");
 
   React.useEffect(() => {
     cardWrapperRef.current!.onmousemove = (e) => {
@@ -128,7 +126,7 @@ export default function Home() {
             <a
               key={i}
               ref={(el) => (cardsRef.current![i] = el!)}
-              href={game.item.value}
+              href={game.url.value}
               target="_blank"
               rel="noopener noreferrer"
               className="card group relative h-48 w-full rounded-xl bg-zinc-700 shadow-md shadow-black outline-none before:absolute before:left-0 before:top-0 before:h-full before:w-full before:rounded-xl before:opacity-0 before:transition-opacity before:duration-500 after:absolute after:left-0 after:top-0 after:h-full after:w-full after:rounded-xl after:opacity-0 after:transition-opacity after:duration-500 hover:shadow-xl hover:shadow-black hover:before:opacity-100"

@@ -1,10 +1,14 @@
-import type { Expression } from "sparqljs";
-
 export type SparTriple = [string, string, string];
 
 export type SparLangFilter = {
   value: string;
   lang: string;
+};
+
+export type SparTextFilter = {
+  value: string;
+  filter: string;
+  attributes: string;
 };
 
 export type SparRequest = {
@@ -15,8 +19,8 @@ export type SparRequest = {
     subject: string;
     descending: boolean;
   };
-  filters?: Expression[];
   langFilters?: SparLangFilter[];
+  textFilters?: SparTextFilter[];
   limit?: number;
   offset?: number;
 };
