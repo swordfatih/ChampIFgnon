@@ -1,4 +1,5 @@
 export type Game = {
+  id: string;
   url: string;
   name: string;
   logo: string;
@@ -12,4 +13,6 @@ export type Website = {
 
 export type GameUniqueDetails = Game & {
   website: string;
+  date: string;
+  genres: string[];
 };

@@ -52,7 +52,11 @@ export function useSearchGames(filter?: string, offset: number = 0) {
   });
 }
 
-async function findGame(id: string) {
+async function findGame(id?: string) {
+  if (!id) {
+    return null;
+  }
+
   const query = format({
     vars: ["id", "name", "logo", "date", "website", "description"],
     triples: [
@@ -99,7 +103,7 @@ async function findGame(id: string) {
   return data;
 }
 
-export function useFindGame(id: string) {
+export function useFindGame(id?: string) {
   return useQuery({
     queryKey: ["useFindGames", id],
     queryFn: () => findGame(id),

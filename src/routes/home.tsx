@@ -1,7 +1,7 @@
 import "@/styles/layout.css";
 
-import React, { useEffect, useState } from "react";
-import { useFindGame, useSearchGames } from "@/services/api/games";
+import React, { useState } from "react";
+import { useSearchGames } from "@/services/api/games";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -10,6 +10,7 @@ import {
   Mouse,
   MoveUpRight,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function Home() {
   const [searchText, setSearchText] = useState("");
@@ -19,12 +20,12 @@ export default function Home() {
   const [offset, setOffset] = useState(0);
 
   const {
-    data: games,
+    data,
     isLoading: gamesLoading,
     isError: gamesError,
   } = useSearchGames(searchText, offset);
 
-  const { data: game } = useFindGame("Q49740");
+  const games = data?.results.bindings;
 
   React.useEffect(() => {
     cardWrapperRef.current!.onmousemove = (e) => {
@@ -38,10 +39,6 @@ export default function Home() {
       }
     };
   }, []);
-
-  useEffect(() => {
-    console.log("game", game);
-  }, [game]);
 
   return (
     <main className="layout w-full bg-black bg-fixed text-white selection:bg-white selection:text-black">
@@ -121,13 +118,11 @@ export default function Home() {
         >
           {gamesLoading && <div>Chargement...</div>}
           {gamesError && <div>Erreur !</div>}
-          {games?.results.bindings.map((game, i) => (
-            <a
+          {games?.map((game, i) => (
+            <Link
               key={i}
               ref={(el) => (cardsRef.current![i] = el!)}
-              href={game.url.value}
-              target="_blank"
-              rel="noopener noreferrer"
+              to={`game/${game.url.value.split("/").slice(-1)}`}
               className="card group relative h-48 w-full rounded-xl bg-zinc-700 shadow-md shadow-black outline-none before:absolute before:left-0 before:top-0 before:h-full before:w-full before:rounded-xl before:opacity-0 before:transition-opacity before:duration-500 after:absolute after:left-0 after:top-0 after:h-full after:w-full after:rounded-xl after:opacity-0 after:transition-opacity after:duration-500 hover:shadow-xl hover:shadow-black hover:before:opacity-100"
             >
               <div className="absolute inset-[1px] z-[2] flex flex-col gap-2.5 rounded-xl bg-[#141414] p-2.5">
@@ -154,7 +149,7 @@ export default function Home() {
                   </p>
                 </div>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
 
