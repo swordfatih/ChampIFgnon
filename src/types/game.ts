@@ -1,5 +1,5 @@
 export type Game = {
-  url: number;
+  url: string;
   name: string;
   logo: string;
   description: string;

@@ -89,10 +89,9 @@ export default function Home() {
                 href="https://github.com/swordfatih/ChampIFgnon/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex rounded-full border border-zinc-700 px-6 py-3 duration-300 hover:bg-white/10 hover:shadow-md hover:shadow-black"
-              >
-                <Github className="mr-2 h-5 w-5 " />
-                Voir notre repo
+                className="flex rounded-full border border-zinc-700 px-6 py-3 duration-300 hover:bg-white/10 hover:shadow-md hover:shadow-black">
+                  <Github className="mr-2 h-5 w-5 " />
+                  Voir notre repo
               </a>
             </div>
           </div>
