@@ -4,7 +4,7 @@ import { useQuery } from "react-query";
 
 import type { SparResponse } from "@/types/sparql";
 
-async function searchGames(filter?: string) {
+async function searchGames(filter?: string, offset: number = 0) {
   const query = format({
     vars: ["url", "name", "logo", "description"],
     triples: [
@@ -33,6 +33,7 @@ async function searchGames(filter?: string) {
         ]
       : undefined,
     limit: 12,
+    offset: offset,
   });
 
   const { data } = await api.wikidata.get<SparResponse>("sparql", {
@@ -44,10 +45,10 @@ async function searchGames(filter?: string) {
   return data;
 }
 
-export function useSearchGames(filter?: string) {
+export function useSearchGames(filter?: string, offset: number = 0) {
   return useQuery({
-    queryKey: ["useSearchGames", filter],
-    queryFn: () => searchGames(filter),
+    queryKey: ["useSearchGames", filter, offset],
+    queryFn: () => searchGames(filter, offset),
   });
 }
 

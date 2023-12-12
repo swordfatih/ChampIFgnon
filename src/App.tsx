@@ -1,3 +1,4 @@
+import Game from "@/routes/game";
 import Home from "@/routes/home";
 import queryClient from "@/services/react-query";
 import { QueryClientProvider } from "react-query";
@@ -14,6 +15,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
+      },
+      {
+        path: "/game",
+        element: <Game />,
       },
     ],
   },
