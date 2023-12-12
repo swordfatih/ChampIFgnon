@@ -32,7 +32,7 @@ async function searchGames(filter?: string) {
           },
         ]
       : undefined,
-    limit: 100,
+    limit: 12,
   });
 
   const { data } = await api.wikidata.get<SparResponse>("sparql", {

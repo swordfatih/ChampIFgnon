@@ -1,17 +1,16 @@
 import "@/styles/layout.css";
 
-import React, { useEffect } from "react";
-import { useSearchGames } from "@/services/api/games";
+import React, { useEffect, useState } from "react";
 import {
-  Clipboard,
   FlameKindling,
   Github,
   Mouse,
   MoveUpRight,
 } from "lucide-react";
+import { useSearchGames } from "@/services/api/games";
 
 export default function Home() {
-  const [showDropdown, setShowDropdown] = React.useState(false);
+  const [searchText, setSearchText] = useState("");
   const featuresRef = React.useRef<HTMLDivElement>(null);
   const cardsRef = React.useRef<HTMLAnchorElement[]>([]);
   const cardWrapperRef = React.useRef<HTMLDivElement>(null);
@@ -20,7 +19,7 @@ export default function Home() {
     data: games,
     isLoading: gamesLoading,
     isError: gamesError,
-  } = useSearchGames("Civilization");
+  } = useSearchGames(searchText);
 
   React.useEffect(() => {
     cardWrapperRef.current!.onmousemove = (e) => {
@@ -62,20 +61,11 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="relative mx-auto max-w-xs rounded-xl border border-zinc-700 p-1 text-zinc-200 shadow-md duration-300 hover:shadow-black sm:max-w-full">
+            <div className="w-1/2 relative mx-auto max-w-xs rounded-xl border border-zinc-700 p-1 text-zinc-200 shadow-md duration-300 hover:shadow-black sm:max-w-full">
               <p className="flex w-full cursor-pointer items-center gap-2 rounded-md bg-white/5 px-2 py-3 font-mono hover:bg-white/10">
                 <span className="text-orange-500">$</span>
 
-                <span className="truncate">
-                  https://github/swordfatih/ChampIFgnon
-                </span>
-
-                <button
-                  onClick={() => setShowDropdown(!showDropdown)}
-                  className="text-zinc-400 transition-colors hover:text-white"
-                >
-                  <Clipboard className="h-5 w-5" />
-                </button>
+                <input className="w-full truncate bg-transparent" value={searchText} onChange={(e)=>setSearchText(e.target.value)}/>
               </p>
             </div>
 
@@ -89,7 +79,7 @@ export default function Home() {
               </a>
 
               <a
-                href="https://github/swordfatih/ChampIFgnon"
+                href="https://github.com/swordfatih/ChampIFgnon/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex rounded-full border border-zinc-700 px-6 py-3 duration-300 hover:bg-white/10 hover:shadow-md hover:shadow-black"
