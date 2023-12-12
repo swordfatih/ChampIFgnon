@@ -1,7 +1,7 @@
 import "@/styles/layout.css";
 
 import React, { useEffect, useState } from "react";
-import { useSearchGames } from "@/services/api/games";
+import { useFindGame, useSearchGames } from "@/services/api/games";
 import { FlameKindling, Github, Mouse, MoveUpRight } from "lucide-react";
 
 export default function Home() {
@@ -15,6 +15,8 @@ export default function Home() {
     isLoading: gamesLoading,
     isError: gamesError,
   } = useSearchGames(searchText);
+
+  const { data: game } = useFindGame("Q49740");
 
   React.useEffect(() => {
     cardWrapperRef.current!.onmousemove = (e) => {
@@ -30,8 +32,8 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    console.log(games);
-  }, [games]);
+    console.log("game", game);
+  }, [game]);
 
   return (
     <main className="layout w-full bg-black bg-fixed text-white selection:bg-white selection:text-black">

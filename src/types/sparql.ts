@@ -11,6 +11,12 @@ export type SparTextFilter = {
   attributes: string;
 };
 
+export type SparBind = {
+  value: string;
+  node: string;
+  literal?: boolean;
+};
+
 export type SparRequest = {
   vars: string[];
   triples: SparTriple[];
@@ -23,6 +29,9 @@ export type SparRequest = {
   textFilters?: SparTextFilter[];
   limit?: number;
   offset?: number;
+  groups?: string[];
+  concats?: string[];
+  binds?: SparBind[];
 };
 
 export type SparResponse = {

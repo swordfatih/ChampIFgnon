@@ -2,7 +2,7 @@ import api from "@/services/api/axios";
 import { format } from "@/services/api/sparql";
 import { useQuery } from "react-query";
 
-import { type SparResponse } from "@/types/sparql";
+import type { SparResponse } from "@/types/sparql";
 
 async function searchGames(filter?: string) {
   const query = format({
@@ -46,7 +46,61 @@ async function searchGames(filter?: string) {
 
 export function useSearchGames(filter?: string) {
   return useQuery({
-    queryKey: ["useFindGames", filter],
+    queryKey: ["useSearchGames", filter],
     queryFn: () => searchGames(filter),
+  });
+}
+
+async function findGame(id: string) {
+  const query = format({
+    vars: ["id", "name", "logo", "date", "website", "description"],
+    triples: [
+      ["id", "rdfs:label", "?name"],
+      ["id", "schema:description", "?description"],
+    ],
+    optionals: [
+      ["id", "wdt:P154", "logo"],
+      ["id", "wdt:P557", "date"],
+      ["id", "wdt:P856", "website"],
+    ],
+    binds: [
+      {
+        node: `wd:${id}`,
+        value: "id",
+      },
+      {
+        node: "en",
+        value: "language",
+        literal: true,
+      },
+    ],
+    langFilters: [
+      {
+        value: "name",
+        lang: "en",
+      },
+      {
+        value: "description",
+        lang: "en",
+      },
+    ],
+    limit: 1,
+  });
+
+  console.log("findgamequery", query);
+
+  const { data } = await api.wikidata.get<SparResponse>("sparql", {
+    params: {
+      query,
+    },
+  });
+
+  return data;
+}
+
+export function useFindGame(id: string) {
+  return useQuery({
+    queryKey: ["useFindGames", id],
+    queryFn: () => findGame(id),
   });
 }
