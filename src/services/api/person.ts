@@ -12,7 +12,7 @@ async function findPerson(id?: string) {
 
   const query = format({
     vars: [
-      "item",
+      "id",
       "name",
       "image",
       "dateBirth",
@@ -21,20 +21,20 @@ async function findPerson(id?: string) {
       "nativeName",
     ],
     triples: [
-      ["item", "rdfs:label", "name"],
-      ["item", "wdt:P31", "wd:Q5"],
+      ["id", "rdfs:label", "name"],
+      ["id", "wdt:P31", "wd:Q5"],
     ],
     optionals: [
-      [["item", "wdt:P18", "image"]],
-      [["item", "wdt:P569", "dateBirth"]],
-      [["item", "wdt:P570", "dateDeath"]],
-      [["item", "wdt:P109", "signature"]],
-      [["item", "wdt:P1559", "nativeName"]],
+      [["id", "wdt:P18", "image"]],
+      [["id", "wdt:P569", "dateBirth"]],
+      [["id", "wdt:P570", "dateDeath"]],
+      [["id", "wdt:P109", "signature"]],
+      [["id", "wdt:P1559", "nativeName"]],
     ],
     binds: [
       {
         node: `wd:${id}`,
-        value: "item",
+        value: "id",
       },
       {
         node: "en",
@@ -69,7 +69,7 @@ export function useFindPerson(id?: string) {
       return person
         ? {
             name: person.name.value,
-            url: person.url.value,
+            id: person.id?.value,
             image: person.image?.value,
             dateBirth: person.dateBirth?.value,
             dateDeath: person.dateDeath?.value,

@@ -1,5 +1,5 @@
 export type PersonCreator = {
-  url: string;
+  id: string;
   name: string;
   image?: string;
   dateBirth?: string;
