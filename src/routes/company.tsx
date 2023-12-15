@@ -22,9 +22,11 @@ export default function Company() {
             </h1>
           </div>
           <div className="px-96">
-            {company?.logo
-              ? "<img className='object-contain' src={company?.logo.value}></img>"
-              : ""}
+            {company?.logo ? (
+              <img className="object-contain" src={company?.logo.value}></img>
+            ) : (
+              ""
+            )}
           </div>
           <h3>
             {company?.inception
