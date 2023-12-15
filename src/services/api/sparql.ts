@@ -1,4 +1,4 @@
-import { Generator, Parser, type SelectQuery, type Triple } from "sparqljs";
+import { Generator, type SelectQuery, type Triple } from "sparqljs";
 
 import type {
   SparLangFilter,
@@ -63,15 +63,6 @@ export function format({
   concats,
   binds,
 }: SparRequest) {
-  const parser = new Parser();
-  console.log("PARSED");
-  console.log(
-    parser.parse(
-      "PREFIX foaf: <http://xmlns.com/foaf/0.1/> " +
-        'SELECT (group_concat(distinct ?other; separator = ";") AS ?names) WHERE { BIND(foaf:name AS ?name) ?mickey foaf:name "Mickey Mouse"@en; foaf:knows ?other. FILTER(regex(?other, ".*CIVILIZATION.*", "i"))} GROUP BY ?mickey'
-    )
-  );
-
   const generator = new Generator({});
 
   const request = template;

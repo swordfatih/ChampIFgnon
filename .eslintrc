@@ -24,7 +24,9 @@
         "varsIgnorePattern": "^_",
         "caughtErrorsIgnorePattern": "^_"
       }
-    ]
+    ],
+    "no-console": "warn",
+    "prefer-const": "warn"
   },
   "settings": {
     "tailwindcss": {

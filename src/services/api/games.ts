@@ -92,8 +92,6 @@ async function findGame(id?: string) {
     limit: 1,
   });
 
-  console.log("findgamequery", query);
-
   const { data } = await api.wikidata.get<SparResponse>("sparql", {
     params: {
       query,

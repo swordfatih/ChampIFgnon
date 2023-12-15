@@ -34,8 +34,6 @@ async function findMultipleProperty(id?: string, property?: string) {
     ],
   });
 
-  console.log("findmultiplepropertyquery", query);
-
   const { data } = await api.wikidata.get<SparResponse>("sparql", {
     params: {
       query,
