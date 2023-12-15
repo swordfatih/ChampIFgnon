@@ -107,3 +107,50 @@ export function useFindGame(id?: string) {
     queryFn: () => findGame(id),
   });
 }
+
+async function findCreators(id?: string, property?: string) {
+  if (!id) {
+    return null;
+  }
+
+  const query = format({
+    vars: ["id", "item", "name", "type"],
+    triples: [
+      ["id", `wdt:${property}`, "item"],
+      ["item", "rdfs:label", "name"],
+      ["item", "wdt:P31", "type"],
+    ],
+    binds: [
+      {
+        node: `wd:${id}`,
+        value: "id",
+      },
+      {
+        node: "en",
+        value: "language",
+        literal: true,
+      },
+    ],
+    langFilters: [
+      {
+        value: "name",
+        lang: "en",
+      },
+    ],
+  });
+
+  const { data } = await api.wikidata.get<SparResponse>("sparql", {
+    params: {
+      query,
+    },
+  });
+
+  return data;
+}
+
+export function useFindCreators(id?: string, property?: string) {
+  return useQuery({
+    queryKey: ["useFindCreators", id, property],
+    queryFn: () => findCreators(id, property),
+  });
+}
