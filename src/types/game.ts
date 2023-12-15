@@ -29,4 +29,10 @@ export type Creator = {
   id: string;
   name: string;
   type: string;
+
+export type SearchGames = {
+  filter?: string;
+  gender?: string;
+  offset?: number;
+
 };

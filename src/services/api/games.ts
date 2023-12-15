@@ -2,11 +2,11 @@ import api from "@/services/api/axios";
 import { format } from "@/services/api/sparql";
 import { useQuery } from "react-query";
 
-import type { Creator, Game, GameUniqueDetails } from "@/types/game";
-import type { SparResponse } from "@/types/sparql";
+import type { Game, GameUniqueDetails, SearchGames, Creator } from "@/types/game";
+import type { SparRequest, SparResponse } from "@/types/sparql";
 
-async function searchGames(filter?: string, offset: number = 0) {
-  const query = format({
+async function searchGames({ filter, gender, offset }: SearchGames) {
+  const query: SparRequest = {
     vars: ["id", "name", "logo", "description"],
     triples: [
       ["id", "wdt:P31", "wd:Q7889"],
@@ -35,21 +35,25 @@ async function searchGames(filter?: string, offset: number = 0) {
       : undefined,
     limit: 12,
     offset: offset,
-  });
+  };
+
+  if (gender) {
+    query.triples.push(["id", "wdt:P136", gender]);
+  }
 
   const { data } = await api.wikidata.get<SparResponse>("sparql", {
     params: {
-      query,
+      query: format(query),
     },
   });
 
   return data;
 }
 
-export function useSearchGames(filter?: string, offset: number = 0) {
+export function useSearchGames(query: SearchGames) {
   return useQuery({
-    queryKey: ["useSearchGames", filter, offset],
-    queryFn: () => searchGames(filter, offset),
+    queryKey: ["useSearchGames", query],
+    queryFn: () => searchGames(query),
     select: (data): Game[] | undefined =>
       data?.results.bindings.map((game) => ({
         name: game.name.value,
