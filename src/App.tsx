@@ -1,13 +1,13 @@
 import Company from "@/routes/company";
 import Game from "@/routes/game";
 import Home from "@/routes/home";
+import Human from "@/routes/human";
 import queryClient from "@/services/react-query";
 import { QueryClientProvider } from "react-query";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import Error from "@/components/error";
 import RootLayout from "@/components/root-layout";
-import Human from "./routes/human";
 
 const router = createBrowserRouter([
   {

@@ -57,7 +57,11 @@ export default function Game() {
                 {new Date(game?.date).toLocaleDateString()}
               </p>
             )}
-            {genders?.map((gender) => <p>{gender.name}</p>)}
+            {genders?.map((gender) => (
+              <a href={gender.item} key={gender.item}>
+                {gender.name}
+              </a>
+            ))}
           </div>
         </div>
       </section>

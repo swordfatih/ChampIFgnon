@@ -20,11 +20,12 @@ export type SparBind = {
 export type SparRequest = {
   vars: string[];
   triples: SparTriple[];
+  unions?: SparTriple[][];
   optionals?: SparTriple[][];
-  order?: {
+  orders?: {
     subject: string;
     descending: boolean;
-  };
+  }[];
   langFilters?: SparLangFilter[];
   textFilters?: SparTextFilter[];
   limit?: number;
@@ -32,6 +33,7 @@ export type SparRequest = {
   groups?: string[];
   concats?: string[];
   binds?: SparBind[];
+  distinct?: boolean;
 };
 
 export type SparResponse = {

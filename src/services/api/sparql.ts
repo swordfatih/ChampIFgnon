@@ -55,13 +55,15 @@ export function format({
   triples,
   offset,
   limit,
-  order,
+  orders,
   optionals,
   langFilters,
   textFilters,
   groups,
   concats,
   binds,
+  distinct,
+  unions,
 }: SparRequest) {
   const generator = new Generator({});
 
@@ -71,6 +73,8 @@ export function format({
     value,
     equals: () => true,
   }));
+
+  request.distinct = distinct;
 
   concats?.forEach((value) => {
     request.variables.push({
@@ -107,18 +111,14 @@ export function format({
     },
   }));
 
-  if (order !== undefined) {
-    request.order = [
-      {
-        expression: {
-          termType: "Variable",
-          value: order.subject,
-          equals: () => true,
-        },
-        descending: order.descending,
-      },
-    ];
-  }
+  request.order = orders?.map((order) => ({
+    expression: {
+      termType: "Variable",
+      value: order.subject,
+      equals: () => true,
+    },
+    descending: order.descending,
+  }));
 
   request.where = [];
 
@@ -149,6 +149,16 @@ export function format({
       },
     });
   });
+
+  if (unions) {
+    request.where.push({
+      type: "union",
+      patterns: unions.map((union) => ({
+        type: "bgp",
+        triples: formatTriples(vars, union),
+      })),
+    });
+  }
 
   request.where.push({
     type: "bgp",
