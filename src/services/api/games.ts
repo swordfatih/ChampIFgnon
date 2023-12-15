@@ -65,7 +65,7 @@ async function findGame(id?: string) {
     ],
     optionals: [
       [["id", "wdt:P154", "logo"]],
-      [["id", "wdt:P557", "date"]],
+      [["id", "wdt:P577", "date"]],
       [["id", "wdt:P856", "website"]],
     ],
     binds: [

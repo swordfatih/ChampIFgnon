@@ -6,6 +6,7 @@ export default function Game() {
 
   const { data } = useFindGame(id);
   const game = data?.results.bindings[0];
+  const date = game?.date.value ? new Date(game?.date.value) : undefined;
 
   return (
     <main className="layout min-h-screen w-full bg-black bg-fixed text-white selection:bg-white selection:text-black">
@@ -15,6 +16,12 @@ export default function Game() {
             <h1 className="bg-gradient-to-r from-white to-gray-500 bg-clip-text pb-4 text-3xl font-bold italic tracking-tighter text-transparent sm:text-5xl xl:text-6xl">
               {game?.name.value}
             </h1>
+
+            {game?.description && (
+              <p className="mx-2 text-2xl text-gray-300 group-hover:text-white">
+                {game.description.value}
+              </p>
+            )}
           </div>
         </div>
       </section>
@@ -30,7 +37,7 @@ export default function Game() {
             <div className="m-1 mb-3.5 h-1/2 w-1/2">
               <img
                 className="h-full w-full"
-                src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmedias.pourlascience.fr%2Fapi%2Fv1%2Fimages%2Fview%2F5a82a9828fe56f22555a9551%2Fwide_1300%2Fimage.jpg&f=1&nofb=1&ipt=2a5d40a1c72699aefe23a568ab386871cbf08d7bf8ba8bf7f2f0e70d0ffd8276&ipo=images"
+                src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fpicturesofmaidenhead.files.wordpress.com%2F2019%2F01%2Fimage-not-found.jpg&f=1&nofb=1&ipt=c7f29bbe09abe700f04cd1938142fdf590986b85187de4571b91d75adfde5afd&ipo=images"
               />
             </div>
           )}
@@ -46,27 +53,22 @@ export default function Game() {
             )}
             {game?.date && (
               <p className="mx-2 text-xl text-gray-300 group-hover:text-white">
-                <b>Date de sortie : </b> {game.date.value}
+                <b>Date de sortie : </b>
+                {date?.toLocaleDateString()}
               </p>
             )}
-            {game?.description && (
-              <p className="mx-2 text-xl text-gray-300 group-hover:text-white">
-                <b>Description : </b> {game.description.value}
-              </p>
-            )}
-            {/*
-            // On n'a pas encore les genres
-            
+            {
+            /*
             game?.genres.value.length != 0 && (
               <p className="mx-2 text-xl text-gray-300 group-hover:text-white">
                 <b>Genre : </b>{" "}
-                {game.genres.slice(0, -1).map((genre) => (
+                {game?.genres.value.slice(0, -1).map((genre) => (
                   <span>{genre}, </span>
                 ))}
-                <span>{game.genres.slice(-1)}</span>
+                <span>{game?.genres.value.slice(-1)}</span>
               </p>
-                )
-            */}
+                )*/
+            }
           </div>
         </div>
       </section>
