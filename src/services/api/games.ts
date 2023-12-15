@@ -2,7 +2,7 @@ import api from "@/services/api/axios";
 import { format } from "@/services/api/sparql";
 import { useQuery } from "react-query";
 
-import type { Game, GameUniqueDetails } from "@/types/game";
+import type { Creator, Game, GameUniqueDetails } from "@/types/game";
 import type { SparResponse } from "@/types/sparql";
 
 async function searchGames(filter?: string, offset: number = 0) {
@@ -137,7 +137,8 @@ async function findCreators(id?: string, property?: string) {
   const query = format({
     vars: ["id", "item", "name", "type"],
     triples: [
-      ["id", `wdt:${property}`, "item"],
+      ["id", `p:${property}`, "?statement"],
+      ["?statement", `ps:${property}`, "item"],
       ["item", "rdfs:label", "name"],
       ["item", "wdt:P31", "type"],
     ],
@@ -145,11 +146,6 @@ async function findCreators(id?: string, property?: string) {
       {
         node: `wd:${id}`,
         value: "id",
-      },
-      {
-        node: "en",
-        value: "language",
-        literal: true,
       },
     ],
     langFilters: [
@@ -173,5 +169,11 @@ export function useFindCreators(id?: string, property?: string) {
   return useQuery({
     queryKey: ["useFindCreators", id, property],
     queryFn: () => findCreators(id, property),
+    select: (data): Creator[] | undefined =>
+      data?.results.bindings.map((result) => ({
+        id: result.item.value,
+        name: result.name.value,
+        type: result.type.value,
+      })),
   });
 }

@@ -14,3 +14,19 @@ export type GameUniqueDetails = Game & {
   website?: string;
   date?: string;
 };
+
+export type HumanCreator = {
+  url: string;
+  name: string;
+  image?: string;
+  dateBirth?: string;
+  dateDeath?: string;
+  signature?: string;
+  nativeName?: string;
+};
+
+export type Creator = {
+  id: string;
+  name: string;
+  type: string;
+};
