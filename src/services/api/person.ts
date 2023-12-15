@@ -2,6 +2,7 @@ import api from "@/services/api/axios";
 import { format } from "@/services/api/sparql";
 import { useQuery } from "react-query";
 
+import type { PersonCreator } from "@/types/person";
 import type { SparResponse } from "@/types/sparql";
 
 async function findPerson(id?: string) {
@@ -63,5 +64,19 @@ export function useFindPerson(id?: string) {
   return useQuery({
     queryKey: ["useFindPersons", id],
     queryFn: () => findPerson(id),
+    select: (data): PersonCreator | undefined => {
+      const person = data?.results.bindings[0];
+      return person
+        ? {
+            name: person.name.value,
+            url: person.url.value,
+            image: person.image?.value,
+            dateBirth: person.dateBirth?.value,
+            dateDeath: person.dateDeath?.value,
+            signature: person.signature?.value,
+            nativeName: person.nativeName?.value,
+          }
+        : undefined;
+    },
   });
 }
