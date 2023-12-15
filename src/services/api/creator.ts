@@ -16,6 +16,10 @@ async function findBestGames(id?: string) {
       ["game", "wdt:P31", "wd:Q7889"],
       ["game", "rdfs:label", "name"],
     ],
+    unions: [
+      [["game", "wdt:P178", "creator"]],
+      [["game", "wdt:P123", "creator"]],
+    ],
     optionals: [
       [
         ["game", "p:P444", "statement"],
