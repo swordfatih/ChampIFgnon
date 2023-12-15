@@ -2,7 +2,7 @@ export type Game = {
   id: string;
   url: string;
   name: string;
-  logo: string;
+  logo?: string;
   description: string;
 };
 
@@ -12,7 +12,7 @@ export type Website = {
 };
 
 export type GameUniqueDetails = Game & {
-  website: string;
-  date: string;
-  genres: string[];
+  website?: string;
+  date?: string;
+  genres?: string[];
 };

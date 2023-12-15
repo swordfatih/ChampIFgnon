@@ -36,7 +36,7 @@ export default function Game() {
           )}
 
           <div className="m-1 mb-3.5 h-1/2 w-1/2 flex-col">
-            {game?.website.value && (
+            {game?.website && (
               <p className="mx-2 text-xl text-gray-300 group-hover:text-white">
                 <b>Site web : </b>{" "}
                 <a href={game.website.value ?? ""} target="blank">
