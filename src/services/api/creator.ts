@@ -42,10 +42,16 @@ async function findBestGames(id?: string) {
         lang: "en",
       },
     ],
-    order: {
-      subject: "score",
-      descending: true,
-    },
+    orders: [
+      {
+        subject: "score",
+        descending: true,
+      },
+      {
+        subject: "name",
+        descending: false,
+      },
+    ],
     limit: 3,
   });
 
