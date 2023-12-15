@@ -1,3 +1,4 @@
+import { useFindMultipleProperty } from "@/services/api/object";
 import { useFindPerson } from "@/services/api/person";
 import { useParams } from "react-router-dom";
 
@@ -5,6 +6,7 @@ export default function Person() {
   const { id } = useParams();
 
   const { data: person } = useFindPerson(id);
+  const { data: occupations } = useFindMultipleProperty(id, "P106");
 
   return (
     <main className="layout min-h-screen w-full bg-black bg-fixed text-white selection:bg-white selection:text-black">
@@ -42,16 +44,26 @@ export default function Person() {
           <div className="m-1 mb-3.5 h-1/2 w-1/2 flex-col">
             {person?.dateBirth && (
               <p className="mx-2 text-xl text-gray-300 group-hover:text-white">
-                <b>Date de naissance : </b>
+                <b>Birth date : </b>
                 {new Date(person?.dateBirth).toLocaleDateString()}
               </p>
             )}
             {person?.dateDeath && (
               <p className="mx-2 text-xl text-gray-300 group-hover:text-white">
-                <b>Date de mort : </b>
+                <b>Death date : </b>
                 {new Date(person?.dateDeath).toLocaleDateString()}
               </p>
             )}
+            {occupations && (
+              <p className="mx-2 text-xl text-gray-300 group-hover:text-white">
+                <b>Occupations : </b>
+              </p>
+            )}
+            {occupations?.map((occupation) => (
+              <li className="mx-2 ml-12 text-xl text-gray-300 group-hover:text-white">
+                {occupation.name}
+              </li>
+            ))}
 
             {person?.signature && (
               <div className="m-1 mb-3.5 h-1/2 w-1/2">
