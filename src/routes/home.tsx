@@ -109,7 +109,6 @@ export default function Home() {
           {games?.map((game) => (
             <GameCard
               key={game.url.value}
-              wrapper={cardWrapperRef}
               game={{
                 url: game.url.value,
                 description: game.description.value,

@@ -1,4 +1,4 @@
-import { useRef, type RefObject } from "react";
+import { useEffect, useRef } from "react";
 import { MoveUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -6,26 +6,29 @@ import type { Game } from "@/types/game";
 
 type GameCardProps = {
   game: Game;
-  wrapper: RefObject<HTMLDivElement>;
 };
 
-export function GameCard({ game, wrapper }: GameCardProps) {
-  const ref = useRef<HTMLAnchorElement[]>([]);
+export function GameCard({ game }: GameCardProps) {
+  const ref = useRef<HTMLAnchorElement>();
 
-  wrapper.current!.onmousemove = (e) => {
-    for (const card of ref.current) {
-      const rect = card.getBoundingClientRect(),
-        x = e.clientX - rect.left,
-        y = e.clientY - rect.top;
+  useEffect(() => {
+    if (ref?.current !== undefined) {
+      ref.current.onmousemove = (e) => {
+        if (ref?.current !== undefined) {
+          const rect = ref.current.getBoundingClientRect(),
+            x = e.clientX - rect.left,
+            y = e.clientY - rect.top;
 
-      card.style.setProperty("--mouse-x", `${x}px`);
-      card.style.setProperty("--mouse-y", `${y}px`);
+          ref.current.style.setProperty("--mouse-x", `${x}px`);
+          ref.current.style.setProperty("--mouse-y", `${y}px`);
+        }
+      };
     }
-  };
+  }, [ref]);
 
   return (
     <Link
-      ref={(el) => (ref.current![0] = el!)}
+      ref={(el) => (ref.current! = el!)}
       to={`game/${game.url.split("/").slice(-1)}`}
       className="card group relative h-48 w-full rounded-xl bg-zinc-700 shadow-md shadow-black outline-none before:absolute before:left-0 before:top-0 before:h-full before:w-full before:rounded-xl before:opacity-0 before:transition-opacity before:duration-500 after:absolute after:left-0 after:top-0 after:h-full after:w-full after:rounded-xl after:opacity-0 after:transition-opacity after:duration-500 hover:shadow-xl hover:shadow-black hover:before:opacity-100"
     >
