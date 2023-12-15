@@ -50,8 +50,6 @@ async function findPerson(id?: string) {
     limit: 1,
   });
 
-  console.log("findpersonquery", query);
-
   const { data } = await api.wikidata.get<SparResponse>("sparql", {
     params: {
       query,

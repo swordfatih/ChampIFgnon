@@ -21,14 +21,10 @@ export default function Home() {
   const [offset, setOffset] = useState(0);
 
   const {
-    data,
+    data: games,
     isLoading: gamesLoading,
     isError: gamesError,
   } = useSearchGames(searchText, offset);
-
-  const games = data?.results.bindings;
-
-  React.useEffect(() => {}, []);
 
   return (
     <main className="layout w-full bg-black bg-fixed text-white selection:bg-white selection:text-black">
@@ -123,17 +119,7 @@ export default function Home() {
           ref={cardWrapperRef}
           className="cards grid items-center gap-3 md:grid-cols-2 md:gap-6 lg:grid-cols-3"
         >
-          {games?.map((game) => (
-            <GameCard
-              key={game.url.value}
-              game={{
-                url: game.url.value,
-                description: game.description.value,
-                name: game.name.value,
-                logo: game.logo?.value,
-              }}
-            />
-          ))}
+          {games?.map((game) => <GameCard key={game.id} game={game} />)}
         </div>
 
         <div className="mt-12 flex items-center justify-center gap-12">

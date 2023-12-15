@@ -4,9 +4,7 @@ import { useParams } from "react-router-dom";
 export default function Game() {
   const { id } = useParams();
 
-  const { data } = useFindGame(id);
-  const game = data?.results.bindings[0];
-  const date = game?.date.value ? new Date(game?.date.value) : undefined;
+  const { data: game } = useFindGame(id);
 
   return (
     <main className="layout min-h-screen w-full bg-black bg-fixed text-white selection:bg-white selection:text-black">
@@ -14,12 +12,12 @@ export default function Game() {
         <div className="grid items-center gap-4">
           <div className="flex flex-col justify-center space-y-4 text-center">
             <h1 className="bg-gradient-to-r from-white to-gray-500 bg-clip-text pb-4 text-3xl font-bold italic tracking-tighter text-transparent sm:text-5xl xl:text-6xl">
-              {game?.name.value}
+              {game?.name}
             </h1>
 
             {game?.description && (
               <p className="mx-2 text-2xl text-gray-300 group-hover:text-white">
-                {game.description.value}
+                {game.description}
               </p>
             )}
           </div>
@@ -30,7 +28,7 @@ export default function Game() {
         <div className="flex h-full w-full overflow-hidden rounded-md p-4">
           {game?.logo && (
             <div className="m-1 mb-3.5 h-1/2 w-1/2">
-              <img className="h-full w-full" src={game?.logo.value ?? ""} />
+              <img className="h-full w-full" src={game?.logo} />
             </div>
           )}
           {!game?.logo && (
@@ -46,27 +44,17 @@ export default function Game() {
             {game?.website && (
               <p className="mx-2 text-xl text-gray-300 group-hover:text-white">
                 <b>Site web : </b>{" "}
-                <a href={game.website.value ?? ""} target="blank">
-                  {game?.website.value}
+                <a href={game.website} target="blank">
+                  {game?.website}
                 </a>
               </p>
             )}
             {game?.date && (
               <p className="mx-2 text-xl text-gray-300 group-hover:text-white">
                 <b>Date de sortie : </b>
-                {date?.toLocaleDateString()}
+                {new Date(game?.date).toLocaleDateString()}
               </p>
             )}
-            {/*
-            game?.genres.value.length != 0 && (
-              <p className="mx-2 text-xl text-gray-300 group-hover:text-white">
-                <b>Genre : </b>{" "}
-                {game?.genres.value.slice(0, -1).map((genre) => (
-                  <span>{genre}, </span>
-                ))}
-                <span>{game?.genres.value.slice(-1)}</span>
-              </p>
-                )*/}
           </div>
         </div>
       </section>

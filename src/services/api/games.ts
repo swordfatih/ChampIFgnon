@@ -2,17 +2,18 @@ import api from "@/services/api/axios";
 import { format } from "@/services/api/sparql";
 import { useQuery } from "react-query";
 
+import type { Game, GameUniqueDetails } from "@/types/game";
 import type { SparResponse } from "@/types/sparql";
 
 async function searchGames(filter?: string, offset: number = 0) {
   const query = format({
-    vars: ["url", "name", "logo", "description"],
+    vars: ["id", "name", "logo", "description"],
     triples: [
-      ["url", "wdt:P31", "wd:Q7889"],
-      ["url", "rdfs:label", "name"],
-      ["url", "schema:description", "description"],
+      ["id", "wdt:P31", "wd:Q7889"],
+      ["id", "rdfs:label", "name"],
+      ["id", "schema:description", "description"],
     ],
-    optionals: [[["url", "wdt:P154", "logo"]]],
+    optionals: [[["id", "wdt:P154", "logo"]]],
     langFilters: [
       {
         value: "name",
@@ -49,6 +50,13 @@ export function useSearchGames(filter?: string, offset: number = 0) {
   return useQuery({
     queryKey: ["useSearchGames", filter, offset],
     queryFn: () => searchGames(filter, offset),
+    select: (data): Game[] | undefined =>
+      data?.results.bindings.map((game) => ({
+        name: game.name.value,
+        id: game.id.value,
+        description: game.description.value,
+        logo: game.logo?.value,
+      })),
   });
 }
 
@@ -105,6 +113,19 @@ export function useFindGame(id?: string) {
   return useQuery({
     queryKey: ["useFindGames", id],
     queryFn: () => findGame(id),
+    select: (data): GameUniqueDetails | undefined => {
+      const game = data?.results.bindings[0];
+      return game
+        ? {
+            name: game.name.value,
+            id: game.id.value,
+            description: game.description.value,
+            logo: game.logo?.value,
+            website: game.website?.value,
+            date: game.date?.value,
+          }
+        : undefined;
+    },
   });
 }
 
