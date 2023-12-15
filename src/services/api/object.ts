@@ -2,6 +2,7 @@ import api from "@/services/api/axios";
 import { format } from "@/services/api/sparql";
 import { useQuery } from "react-query";
 
+import type { Property } from "@/types/object";
 import type { SparResponse } from "@/types/sparql";
 
 async function findMultipleProperty(id?: string, property?: string) {
@@ -47,5 +48,11 @@ export function useFindMultipleProperty(id?: string, property?: string) {
   return useQuery({
     queryKey: ["useFindMultipleProperty", id, property],
     queryFn: () => findMultipleProperty(id, property),
+    select: (data): Property[] | undefined =>
+      data?.results.bindings.map((result) => ({
+        id: result.id.value,
+        name: result.name.value,
+        item: result.item.value,
+      })),
   });
 }

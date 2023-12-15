@@ -1,10 +1,12 @@
 import { useFindGame } from "@/services/api/games";
+import { useFindMultipleProperty } from "@/services/api/object";
 import { useParams } from "react-router-dom";
 
 export default function Game() {
   const { id } = useParams();
 
   const { data: game } = useFindGame(id);
+  const { data: genders } = useFindMultipleProperty(id, "P136");
 
   return (
     <main className="layout min-h-screen w-full bg-black bg-fixed text-white selection:bg-white selection:text-black">
@@ -55,6 +57,7 @@ export default function Game() {
                 {new Date(game?.date).toLocaleDateString()}
               </p>
             )}
+            {genders?.map((gender) => <p>{gender.name}</p>)}
           </div>
         </div>
       </section>
