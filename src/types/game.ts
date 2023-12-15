@@ -15,3 +15,13 @@ export type GameUniqueDetails = Game & {
   date?: string;
   genres?: string[];
 };
+
+export type HumanCreator = {
+  url: string;
+  name: string;
+  image?: string;
+  dateBirth?: string;
+  dateDeath?: string;
+  signature?: string;
+  nativeName?: string;
+}
