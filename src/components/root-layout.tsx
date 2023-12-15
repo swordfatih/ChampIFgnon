@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 
-import { TailwindIndicator } from "./tailwind-indicator";
+import { TailwindIndicator } from "@/components/tailwind-indicator";
 
 const RootLayout = () => {
   return (
