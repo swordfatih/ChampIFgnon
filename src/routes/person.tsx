@@ -1,12 +1,18 @@
-import { useFindGame } from "@/services/api/games";
-import { useFindMultipleProperty } from "@/services/api/object";
+import { useFindPerson } from "@/services/api/person";
 import { useParams } from "react-router-dom";
 
-export default function Game() {
+export default function Person() {
   const { id } = useParams();
 
-  const { data: game } = useFindGame(id);
-  const { data: genders } = useFindMultipleProperty(id, "P136");
+  const { data } = useFindPerson(id);
+  const person = data?.results.bindings[0];
+  const dateBirth = person?.dateBirth.value
+    ? new Date(person?.dateBirth.value)
+    : undefined;
+  let dateDeath;
+  if (person?.dateDeath) {
+    dateDeath = new Date(person?.dateDeath.value);
+  }
 
   return (
     <main className="layout min-h-screen w-full bg-black bg-fixed text-white selection:bg-white selection:text-black">
@@ -14,12 +20,11 @@ export default function Game() {
         <div className="grid items-center gap-4">
           <div className="flex flex-col justify-center space-y-4 text-center">
             <h1 className="bg-gradient-to-r from-white to-gray-500 bg-clip-text pb-4 text-3xl font-bold italic tracking-tighter text-transparent sm:text-5xl xl:text-6xl">
-              {game?.name}
+              {person?.name.value}
             </h1>
-
-            {game?.description && (
+            {person?.nativeName.value != person?.name.value && (
               <p className="mx-2 text-2xl text-gray-300 group-hover:text-white">
-                {game.description}
+                {person?.nativeName.value}
               </p>
             )}
           </div>
@@ -28,12 +33,12 @@ export default function Game() {
 
       <section className="container px-4 py-12 md:px-2 md:pt-4 lg:pt-8 xl:pt-12">
         <div className="flex h-full w-full overflow-hidden rounded-md p-4">
-          {game?.logo && (
+          {person?.image && (
             <div className="m-1 mb-3.5 h-1/2 w-1/2">
-              <img className="h-full w-full" src={game?.logo} />
+              <img className="h-full w-full" src={person?.image.value ?? ""} />
             </div>
           )}
-          {!game?.logo && (
+          {!person?.image && (
             <div className="m-1 mb-3.5 h-1/2 w-1/2">
               <img
                 className="h-full w-full"
@@ -43,21 +48,37 @@ export default function Game() {
           )}
 
           <div className="m-1 mb-3.5 h-1/2 w-1/2 flex-col">
-            {game?.website && (
+            {person?.dateBirth && (
               <p className="mx-2 text-xl text-gray-300 group-hover:text-white">
-                <b>Site web : </b>{" "}
-                <a href={game.website} target="blank">
-                  {game?.website}
-                </a>
+                <b>Date de naissance : </b>
+                {dateBirth?.toLocaleDateString()}
               </p>
             )}
-            {game?.date && (
+            {person?.dateDeath && (
               <p className="mx-2 text-xl text-gray-300 group-hover:text-white">
-                <b>Date de sortie : </b>
-                {new Date(game?.date).toLocaleDateString()}
+                <b>Date de mort : </b>
+                {dateDeath?.toLocaleDateString()}
               </p>
             )}
-            {genders?.map((gender) => <p>{gender.name}</p>)}
+
+            {person?.signature && (
+              <div className="m-1 mb-3.5 h-1/2 w-1/2">
+                <img
+                  className="h-full w-full brightness-0 invert"
+                  src={person?.signature.value}
+                />
+              </div>
+            )}
+            {/*
+            game?.genres.value.length != 0 && (
+              <p className="mx-2 text-xl text-gray-300 group-hover:text-white">
+                <b>Genre : </b>{" "}
+                {game?.genres.value.slice(0, -1).map((genre) => (
+                  <span>{genre}, </span>
+                ))}
+                <span>{game?.genres.value.slice(-1)}</span>
+              </p>
+                )*/}
           </div>
         </div>
       </section>

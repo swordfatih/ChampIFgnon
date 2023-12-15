@@ -1,6 +1,7 @@
 import Company from "@/routes/company";
 import Game from "@/routes/game";
 import Home from "@/routes/home";
+import Person from "@/routes/person";
 import queryClient from "@/services/react-query";
 import { QueryClientProvider } from "react-query";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
       {
         path: "/company/:id",
         element: <Company />,
+      },
+      {
+        path: "/personCreator/:id",
+        element: <Person />,
       },
     ],
   },

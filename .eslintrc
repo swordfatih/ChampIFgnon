@@ -26,7 +26,13 @@
       }
     ],
     "no-console": "warn",
-    "prefer-const": "warn"
+    "prefer-const": "warn",
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [".*"]
+      }
+    ]
   },
   "settings": {
     "tailwindcss": {
