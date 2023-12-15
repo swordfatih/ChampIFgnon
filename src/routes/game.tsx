@@ -7,6 +7,7 @@ export default function Game() {
 
   const { data: game } = useFindGame(id);
   const { data: genders } = useFindMultipleProperty(id, "P136");
+  const { data: scores } = useFindMultipleProperty(id, "P737");
 
   return (
     <main className="layout min-h-screen w-full bg-black bg-fixed text-white selection:bg-white selection:text-black">
@@ -42,26 +43,49 @@ export default function Game() {
             </div>
           )}
 
-          <div className="m-1 mb-3.5 h-1/2 w-1/2 flex-col">
+          <div className="m-1 mb-3.5 h-1/2 w-1/2 flex-col p-2">
             {game?.website && (
-              <p className="mx-2 text-xl text-gray-300 group-hover:text-white">
-                <b>Site web : </b>{" "}
+              <div className="flex gap-2 text-xl font-bold text-gray-300 group-hover:text-white">
+                <p>Site web :</p>
                 <a href={game.website} target="blank">
                   {game?.website}
                 </a>
-              </p>
+              </div>
             )}
             {game?.date && (
-              <p className="mx-2 text-xl text-gray-300 group-hover:text-white">
-                <b>Date de sortie : </b>
+              <div className="flex gap-2 text-xl font-bold text-gray-300 group-hover:text-white">
+                <p>Date de sortie :</p>
                 {new Date(game?.date).toLocaleDateString()}
-              </p>
+              </div>
             )}
-            {genders?.map((gender) => (
-              <a href={gender.item} key={gender.item}>
-                {gender.name}
-              </a>
-            ))}
+            {genders && genders.length > 0 && (
+              <div>
+                <p className="text-xl font-bold text-gray-300 group-hover:text-white">
+                  Genres :
+                </p>
+                <ul>
+                  {genders?.map((gender) => (
+                    <li className="text-lg" key={gender.item}>
+                      <a href={gender.item}>{gender.name}</a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {genders && genders.length > 0 && (
+              <div>
+                <p className="text-xl font-bold text-gray-300 group-hover:text-white">
+                  Genres :
+                </p>
+                <ul>
+                  {scores?.map((gender) => (
+                    <li className="text-lg" key={gender.item}>
+                      <a href={gender.item}>{gender.name}</a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         </div>
       </section>

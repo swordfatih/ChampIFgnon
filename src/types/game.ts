@@ -14,3 +14,9 @@ export type GameUniqueDetails = Game & {
   website?: string;
   date?: string;
 };
+
+export type SearchGames = {
+  filter?: string;
+  gender?: string;
+  offset?: number;
+};

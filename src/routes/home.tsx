@@ -24,7 +24,11 @@ export default function Home() {
     data: games,
     isLoading: gamesLoading,
     isError: gamesError,
-  } = useSearchGames(searchText, offset);
+  } = useSearchGames({
+    filter: searchText,
+    offset,
+    gender: "wd:Q2762504",
+  });
 
   return (
     <main className="layout w-full bg-black bg-fixed text-white selection:bg-white selection:text-black">
