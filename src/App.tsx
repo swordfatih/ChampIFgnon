@@ -7,6 +7,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import Error from "@/components/error";
 import RootLayout from "@/components/root-layout";
+import Human from "./routes/human";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
       {
         path: "/company/:id",
         element: <Company />,
+      },
+      {
+        path: "/humanCreator/:id",
+        element: <Human />,
       },
     ],
   },
