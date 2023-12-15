@@ -64,8 +64,8 @@ export default function Person() {
             {person?.signature && (
               <div className="m-1 mb-3.5 h-1/2 w-1/2">
                 <img
-                  className="h-full w-full"
-                  src={person?.signature.value ?? ""}
+                  className="h-full w-full brightness-0 invert"
+                  src={person?.signature.value}
                 />
               </div>
             )}
