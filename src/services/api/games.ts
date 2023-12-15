@@ -38,7 +38,7 @@ async function searchGames({ filter, gender, offset }: SearchGames) {
   };
 
   if (gender) {
-    query.triples.push(["id", "wdt:P136", gender]);
+    query.triples.push(["id", "wdt:P136", `wd:${gender}`]);
   }
 
   const { data } = await api.wikidata.get<SparResponse>("sparql", {

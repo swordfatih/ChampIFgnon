@@ -32,18 +32,27 @@ function formatTriples(vars: string[], triples?: SparTriple[]): Triple[] {
 
   return triples.map((triple) => ({
     subject: {
-      termType: vars.includes(triple[0]) ? "Variable" : "NamedNode",
-      value: triple[0],
+      termType:
+        vars.includes(triple[0]) || triple[0].startsWith("?")
+          ? "Variable"
+          : "NamedNode",
+      value: triple[0].replace("?", ""),
       equals: () => true,
     },
     predicate: {
-      termType: vars.includes(triple[1]) ? "Variable" : "NamedNode",
-      value: triple[1],
+      termType:
+        vars.includes(triple[1]) || triple[1].startsWith("?")
+          ? "Variable"
+          : "NamedNode",
+      value: triple[1].replace("?", ""),
       equals: () => true,
     },
     object: {
-      termType: vars.includes(triple[2]) ? "Variable" : "NamedNode",
-      value: triple[2],
+      termType:
+        vars.includes(triple[2]) || triple[2].startsWith("?")
+          ? "Variable"
+          : "NamedNode",
+      value: triple[2].replace("?", ""),
       equals: () => true,
     },
   }));

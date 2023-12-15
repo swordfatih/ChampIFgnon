@@ -2,6 +2,7 @@ import "@/styles/layout.css";
 
 import React, { useState } from "react";
 import { useSearchGames } from "@/services/api/games";
+import { useFindAllGenders } from "@/services/api/gender";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -11,6 +12,7 @@ import {
 } from "lucide-react";
 import { BiMessageSquareError } from "react-icons/bi";
 import { InfinitySpin } from "react-loader-spinner";
+import { ReactSearchAutocomplete } from "react-search-autocomplete";
 
 import GameCard from "@/components/gameCard";
 
@@ -19,6 +21,9 @@ export default function Home() {
   const featuresRef = React.useRef<HTMLDivElement>(null);
   const cardWrapperRef = React.useRef<HTMLDivElement>(null);
   const [offset, setOffset] = useState(0);
+  const [gender, setGender] = useState<string>();
+
+  const { data: genders } = useFindAllGenders();
 
   const {
     data: games,
@@ -27,7 +32,7 @@ export default function Home() {
   } = useSearchGames({
     filter: searchText,
     offset,
-    gender: "wd:Q2762504",
+    gender,
   });
 
   return (
@@ -40,7 +45,6 @@ export default function Home() {
           width={150}
           className="mx-auto mb-6 max-w-[100px] animate-[spin_5s_linear_infinite] md:max-w-full"
         />
-
         <div className="grid items-center gap-6">
           <div className="flex flex-col justify-center space-y-4 text-center">
             <div className="mb-6 space-y-2">
@@ -53,8 +57,8 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="relative mx-auto w-1/2 max-w-xs rounded-xl border border-zinc-700 p-1 text-zinc-200 shadow-md duration-300 hover:shadow-black sm:max-w-full">
-              <p className="flex w-full cursor-pointer items-center gap-2 rounded-md bg-white/5 px-2 py-3 font-mono hover:bg-white/10">
+            <div className="relative mx-auto flex w-1/2 max-w-xs rounded-xl border border-zinc-700 p-1 text-zinc-200 shadow-md duration-300 hover:shadow-black sm:max-w-full">
+              <p className="flex grow cursor-pointer items-center gap-2 rounded-md bg-white/5 px-2 py-3 font-mono hover:bg-white/10">
                 <span className="text-orange-500">$</span>
 
                 <input
@@ -63,6 +67,21 @@ export default function Home() {
                   onChange={(e) => setSearchText(e.target.value)}
                 />
               </p>
+
+              <div className="grow">
+                <ReactSearchAutocomplete
+                  className="z-10"
+                  items={
+                    genders?.map((gender) => ({
+                      id: gender.id,
+                      name: gender.name,
+                    })) || []
+                  }
+                  onSelect={(result) =>
+                    setGender(result.id.split("/").slice(-1)[0])
+                  }
+                />
+              </div>
             </div>
 
             <div className="flex flex-col items-center justify-center gap-4 md:flex-row">
