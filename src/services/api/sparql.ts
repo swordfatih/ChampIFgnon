@@ -170,7 +170,7 @@ export function format({
       patterns: [
         {
           type: "bgp",
-          triples: formatTriples(vars, [optional]),
+          triples: formatTriples(vars, optional),
         },
       ],
     });

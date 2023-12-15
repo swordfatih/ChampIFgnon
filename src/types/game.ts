@@ -1,5 +1,4 @@
 export type Game = {
-  id: string;
   url: string;
   name: string;
   logo?: string;

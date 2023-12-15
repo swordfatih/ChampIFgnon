@@ -12,7 +12,7 @@ async function searchGames(filter?: string, offset: number = 0) {
       ["url", "rdfs:label", "name"],
       ["url", "schema:description", "description"],
     ],
-    optionals: [["url", "wdt:P154", "logo"]],
+    optionals: [[["url", "wdt:P154", "logo"]]],
     langFilters: [
       {
         value: "name",
@@ -64,9 +64,9 @@ async function findGame(id?: string) {
       ["id", "schema:description", "?description"],
     ],
     optionals: [
-      ["id", "wdt:P154", "logo"],
-      ["id", "wdt:P557", "date"],
-      ["id", "wdt:P856", "website"],
+      [["id", "wdt:P154", "logo"]],
+      [["id", "wdt:P557", "date"]],
+      [["id", "wdt:P856", "website"]],
     ],
     binds: [
       {

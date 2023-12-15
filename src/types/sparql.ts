@@ -20,7 +20,7 @@ export type SparBind = {
 export type SparRequest = {
   vars: string[];
   triples: SparTriple[];
-  optionals?: SparTriple[];
+  optionals?: SparTriple[][];
   order?: {
     subject: string;
     descending: boolean;
