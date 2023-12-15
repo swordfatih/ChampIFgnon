@@ -33,7 +33,7 @@ async function findPerson(id?: string) {
     binds: [
       {
         node: `wd:${id}`,
-        value: "id",
+        value: "item",
       },
       {
         node: "en",
