@@ -1,3 +1,4 @@
+import { useFindBestGames } from "@/services/api/creator";
 import { useFindMultipleProperty } from "@/services/api/object";
 import { useFindPerson } from "@/services/api/person";
 import { useParams } from "react-router-dom";
@@ -7,6 +8,7 @@ export default function Person() {
 
   const { data: person } = useFindPerson(id);
   const { data: occupations } = useFindMultipleProperty(id, "P106");
+  const { data: bestGames } = useFindBestGames(id);
 
   return (
     <main className="layout min-h-screen w-full bg-black bg-fixed text-white selection:bg-white selection:text-black">
@@ -75,6 +77,18 @@ export default function Person() {
             )}
           </div>
         </div>
+      </section>
+      <section className="container px-4 py-12 md:px-6 md:pt-8 lg:pt-16 xl:pt-24">
+        {bestGames && (
+          <p className="mx-2 text-xl text-gray-300 group-hover:text-white">
+            <b>List of games : </b>
+          </p>
+        )}
+        {bestGames?.map((game) => (
+          <li className="mx-2 ml-12 text-xl text-gray-300 group-hover:text-white">
+            {game.name}
+          </li>
+        ))}
       </section>
     </main>
   );

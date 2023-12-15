@@ -1,4 +1,4 @@
-import { useFindGame } from "@/services/api/games";
+import { useFindCreators, useFindGame } from "@/services/api/games";
 import { useFindMultipleProperty } from "@/services/api/object";
 import { useParams } from "react-router-dom";
 
@@ -6,8 +6,26 @@ export default function Game() {
   const { id } = useParams();
 
   const { data: game } = useFindGame(id);
+  let { data: publishers } = useFindCreators(id, "P123");
+  let { data: developers } = useFindCreators(id, "P178");
   const { data: genders } = useFindMultipleProperty(id, "P136");
   const { data: scores } = useFindMultipleProperty(id, "P737");
+
+  publishers = publishers?.filter((publisher, index) => {
+    return (
+      publishers?.find(
+        (element, index2) => element.name == publisher.name && index2 < index
+      ) == undefined
+    );
+  });
+
+  developers = developers?.filter((developer, index) => {
+    return (
+      developers?.find(
+        (element, index2) => element.name == developer.name && index2 < index
+      ) == undefined
+    );
+  });
 
   return (
     <main className="layout min-h-screen w-full bg-black bg-fixed text-white selection:bg-white selection:text-black">
@@ -86,6 +104,33 @@ export default function Game() {
                 </ul>
               </div>
             )}
+            {genders?.map((gender) => <p>{gender.name}</p>)}
+            <h2>Publishers</h2>
+            {publishers?.map((pub) => (
+              <a
+                className="block"
+                href={`/${
+                  pub.type.split("/").slice(-1)[0] == "Q5"
+                    ? "person"
+                    : "company"
+                }/${pub.id.split("/").slice(-1)}`}
+              >
+                {pub.name}
+              </a>
+            ))}
+            <h2>Developers</h2>
+            {developers?.map((dev) => (
+              <a
+                className="block"
+                href={`/${
+                  dev.type.split("/").slice(-1)[0] == "Q5"
+                    ? "person"
+                    : "company"
+                }/${dev.id.split("/").slice(-1)}`}
+              >
+                {dev.name}
+              </a>
+            ))}
           </div>
         </div>
       </section>
