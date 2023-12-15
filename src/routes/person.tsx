@@ -1,15 +1,17 @@
 import { useFindPerson } from "@/services/api/person";
 import { useParams } from "react-router-dom";
 
-export default function Human() {
+export default function Person() {
   const { id } = useParams();
 
   const { data } = useFindPerson(id);
-  const human = data?.results.bindings[0];
-  const dateBirth = human?.dateBirth.value ? new Date(human?.dateBirth.value) : undefined;
+  const person = data?.results.bindings[0];
+  const dateBirth = person?.dateBirth.value
+    ? new Date(person?.dateBirth.value)
+    : undefined;
   let dateDeath;
-  if (human?.dateDeath) {
-    dateDeath = new Date(human?.dateDeath.value);
+  if (person?.dateDeath) {
+    dateDeath = new Date(person?.dateDeath.value);
   }
 
   return (
@@ -18,11 +20,11 @@ export default function Human() {
         <div className="grid items-center gap-4">
           <div className="flex flex-col justify-center space-y-4 text-center">
             <h1 className="bg-gradient-to-r from-white to-gray-500 bg-clip-text pb-4 text-3xl font-bold italic tracking-tighter text-transparent sm:text-5xl xl:text-6xl">
-              {human?.name.value}
+              {person?.name.value}
             </h1>
-            {human?.nativeName.value != human?.name.value && (
+            {person?.nativeName.value != person?.name.value && (
               <p className="mx-2 text-2xl text-gray-300 group-hover:text-white">
-                {human?.nativeName.value}
+                {person?.nativeName.value}
               </p>
             )}
           </div>
@@ -31,12 +33,12 @@ export default function Human() {
 
       <section className="container px-4 py-12 md:px-2 md:pt-4 lg:pt-8 xl:pt-12">
         <div className="flex h-full w-full overflow-hidden rounded-md p-4">
-          {human?.image && (
+          {person?.image && (
             <div className="m-1 mb-3.5 h-1/2 w-1/2">
-              <img className="h-full w-full" src={human?.image.value ?? ""} />
+              <img className="h-full w-full" src={person?.image.value ?? ""} />
             </div>
           )}
-          {!human?.image && (
+          {!person?.image && (
             <div className="m-1 mb-3.5 h-1/2 w-1/2">
               <img
                 className="h-full w-full"
@@ -46,29 +48,28 @@ export default function Human() {
           )}
 
           <div className="m-1 mb-3.5 h-1/2 w-1/2 flex-col">
-            
-            {human?.dateBirth && (
+            {person?.dateBirth && (
               <p className="mx-2 text-xl text-gray-300 group-hover:text-white">
                 <b>Date de naissance : </b>
                 {dateBirth?.toLocaleDateString()}
               </p>
             )}
-            {human?.dateDeath && (
+            {person?.dateDeath && (
               <p className="mx-2 text-xl text-gray-300 group-hover:text-white">
                 <b>Date de mort : </b>
                 {dateDeath?.toLocaleDateString()}
               </p>
             )}
 
-          {human?.signature && (
-            <div className="m-1 mb-3.5 h-1/2 w-1/2">
-              <img
-                className="h-full w-full" src={human?.signature.value ?? ""} 
-              />
-            </div>
-          )}
-            {
-            /*
+            {person?.signature && (
+              <div className="m-1 mb-3.5 h-1/2 w-1/2">
+                <img
+                  className="h-full w-full"
+                  src={person?.signature.value ?? ""}
+                />
+              </div>
+            )}
+            {/*
             game?.genres.value.length != 0 && (
               <p className="mx-2 text-xl text-gray-300 group-hover:text-white">
                 <b>Genre : </b>{" "}
@@ -77,8 +78,7 @@ export default function Human() {
                 ))}
                 <span>{game?.genres.value.slice(-1)}</span>
               </p>
-                )*/
-            }
+                )*/}
           </div>
         </div>
       </section>
