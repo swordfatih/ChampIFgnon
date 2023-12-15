@@ -11,11 +11,20 @@ async function findBestGames(id?: string) {
   }
 
   const query = format({
-    vars: ["game", "name", "logo", "score", "statement", "creator"],
+    vars: [
+      "game",
+      "name",
+      "logo",
+      "score",
+      "statement",
+      "creator",
+      "description",
+    ],
     triples: [
       ["game", "wdt:P178", "creator"],
       ["game", "wdt:P31", "wd:Q7889"],
       ["game", "rdfs:label", "name"],
+      ["game", "schema:description", "?description"],
     ],
     unions: [
       [["game", "wdt:P178", "creator"]],
@@ -44,6 +53,10 @@ async function findBestGames(id?: string) {
     langFilters: [
       {
         value: "name",
+        lang: "en",
+      },
+      {
+        value: "description",
         lang: "en",
       },
     ],
