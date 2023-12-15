@@ -59,6 +59,9 @@ export function format({
   optionals,
   langFilters,
   textFilters,
+  groups,
+  concats,
+  binds,
 }: SparRequest) {
   const generator = new Generator({});
 
@@ -69,8 +72,40 @@ export function format({
     equals: () => true,
   }));
 
+  concats?.forEach((value) => {
+    request.variables.push({
+      expression: {
+        aggregation: "group_concat",
+        distinct: true,
+        separator: ";",
+        type: "aggregate",
+        expression: {
+          termType: "Variable",
+          value,
+          equals: () => true,
+        },
+      },
+      variable: {
+        termType: "Variable",
+        value: `${value}s`,
+        equals: () => true,
+      },
+      equals: () => true,
+      termType: "Wildcard",
+      value: "*",
+    });
+  });
+
   request.offset = offset;
   request.limit = limit;
+
+  request.group = groups?.map((value) => ({
+    expression: {
+      termType: "Variable",
+      value,
+      equals: () => true,
+    },
+  }));
 
   if (order !== undefined) {
     request.order = [
@@ -85,21 +120,52 @@ export function format({
     ];
   }
 
-  request.where = [
-    {
-      type: "bgp",
-      triples: formatTriples(vars, triples),
-    },
-    {
+  request.where = [];
+
+  binds?.forEach(({ value, node, literal }) => {
+    request.where?.push({
+      type: "bind",
+      expression: literal
+        ? {
+            termType: "Literal",
+            value: node,
+            language: "",
+            datatype: {
+              termType: "NamedNode",
+              value: "http://www.w3.org/2001/XMLSchema#string",
+              equals: () => true,
+            },
+            equals: () => true,
+          }
+        : {
+            termType: "NamedNode",
+            value: node,
+            equals: () => true,
+          },
+      variable: {
+        termType: "Variable",
+        value,
+        equals: () => true,
+      },
+    });
+  });
+
+  request.where.push({
+    type: "bgp",
+    triples: formatTriples(vars, triples),
+  });
+
+  optionals?.forEach((optional) => {
+    request.where?.push({
       type: "optional",
       patterns: [
         {
           type: "bgp",
-          triples: formatTriples(vars, optionals),
+          triples: formatTriples(vars, optional),
         },
       ],
-    },
-  ];
+    });
+  });
 
   langFilters?.forEach(({ value, lang }: SparLangFilter) => {
     request.where?.push({

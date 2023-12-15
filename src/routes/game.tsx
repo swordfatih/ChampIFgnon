@@ -1,28 +1,72 @@
-import { useEffect } from "react";
+import { useFindGame } from "@/services/api/games";
 import { useParams } from "react-router-dom";
 
-import type { Game } from "@/types/game";
-
 export default function Game() {
-  const params = useParams();
+  const { id } = useParams();
 
-  const game: Game = {
-    name: "Minecraft",
-    url: "https://www.minecraft.net/fr-fr",
-    logo: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%3Fid%3DOIP.F0mIB5kWOldDWtdyWipr2AHaD3%26pid%3DApi&f=1&ipt=68cfe4fac7b5ba392822e4465ba3654c98a1113f757d2c727b7f7da91df6e512&ipo=images",
-    description: "Un jeu d'aventure cubique",
-  };
-
-  useEffect(() => {});
+  const { data } = useFindGame(id);
+  const game = data?.results.bindings[0];
+  const date = game?.date.value ? new Date(game?.date.value) : undefined;
 
   return (
     <main className="layout min-h-screen w-full bg-black bg-fixed text-white selection:bg-white selection:text-black">
-      <section className="container px-4 py-12 md:px-6 md:pt-24 lg:pt-32 xl:pt-48">
-        <div className="grid items-center gap-6">
+      <section className="container px-4 py-12 md:px-6 md:pt-8 lg:pt-16 xl:pt-24">
+        <div className="grid items-center gap-4">
           <div className="flex flex-col justify-center space-y-4 text-center">
-            <h1 className="bg-gradient-to-r from-white to-gray-500 bg-clip-text pb-4 text-3xl font-bold tracking-tighter text-transparent sm:text-5xl xl:text-6xl">
-              Jeu : {game.name}
+            <h1 className="bg-gradient-to-r from-white to-gray-500 bg-clip-text pb-4 text-3xl font-bold italic tracking-tighter text-transparent sm:text-5xl xl:text-6xl">
+              {game?.name.value}
             </h1>
+
+            {game?.description && (
+              <p className="mx-2 text-2xl text-gray-300 group-hover:text-white">
+                {game.description.value}
+              </p>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <section className="container px-4 py-12 md:px-2 md:pt-4 lg:pt-8 xl:pt-12">
+        <div className="flex h-full w-full overflow-hidden rounded-md p-4">
+          {game?.logo && (
+            <div className="m-1 mb-3.5 h-1/2 w-1/2">
+              <img className="h-full w-full" src={game?.logo.value ?? ""} />
+            </div>
+          )}
+          {!game?.logo && (
+            <div className="m-1 mb-3.5 h-1/2 w-1/2">
+              <img
+                className="h-full w-full"
+                src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fpicturesofmaidenhead.files.wordpress.com%2F2019%2F01%2Fimage-not-found.jpg&f=1&nofb=1&ipt=c7f29bbe09abe700f04cd1938142fdf590986b85187de4571b91d75adfde5afd&ipo=images"
+              />
+            </div>
+          )}
+
+          <div className="m-1 mb-3.5 h-1/2 w-1/2 flex-col">
+            {game?.website && (
+              <p className="mx-2 text-xl text-gray-300 group-hover:text-white">
+                <b>Site web : </b>{" "}
+                <a href={game.website.value ?? ""} target="blank">
+                  {game?.website.value}
+                </a>
+              </p>
+            )}
+            {game?.date && (
+              <p className="mx-2 text-xl text-gray-300 group-hover:text-white">
+                <b>Date de sortie : </b>
+                {date?.toLocaleDateString()}
+              </p>
+            )}
+            {/*
+            game?.genres.value.length != 0 && (
+              <p className="mx-2 text-xl text-gray-300 group-hover:text-white">
+                <b>Genre : </b>{" "}
+                {game?.genres.value.slice(0, -1).map((genre) => (
+                  <span>{genre}, </span>
+                ))}
+                <span>{game?.genres.value.slice(-1)}</span>
+              </p>
+                )*/}
           </div>
         </div>
       </section>

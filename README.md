@@ -4,7 +4,7 @@ Encyclopédie sur les champignons
 
 # Installation
 
-Requirements: (https://nodejs.org/en/download)[Node >= 20]
+Requirements: [Node >= 20](https://nodejs.org/en/download)
 
 Download packages:
 `npm install`
