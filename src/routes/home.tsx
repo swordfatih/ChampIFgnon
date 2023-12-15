@@ -10,6 +10,8 @@ import {
   Mouse,
   MoveUpRight,
 } from "lucide-react";
+import { BiMessageSquareError } from "react-icons/bi";
+import { InfinitySpin } from "react-loader-spinner";
 
 export default function Home() {
   const [searchText, setSearchText] = useState("");
@@ -89,9 +91,10 @@ export default function Home() {
                 href="https://github.com/swordfatih/ChampIFgnon/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex rounded-full border border-zinc-700 px-6 py-3 duration-300 hover:bg-white/10 hover:shadow-md hover:shadow-black">
-                  <Github className="mr-2 h-5 w-5 " />
-                  Voir notre repo
+                className="flex rounded-full border border-zinc-700 px-6 py-3 duration-300 hover:bg-white/10 hover:shadow-md hover:shadow-black"
+              >
+                <Github className="mr-2 h-5 w-5 " />
+                Voir notre repo
               </a>
             </div>
           </div>
@@ -112,12 +115,28 @@ export default function Home() {
           Jeux
         </h2>
 
+        {gamesLoading && (
+          <div className="flex w-full justify-center">
+            <div className="w-fit">
+              <InfinitySpin width="200" color="#f9f9f9" />
+            </div>
+          </div>
+        )}
+
+        {(gamesError || !games || games.results.bindings.length === 0) &&
+          !gamesLoading && (
+            <div className="flex w-full justify-center">
+              <div className="flex w-fit flex-col items-center justify-center text-center">
+                <BiMessageSquareError size={40} color="red" />
+                <p className="text-gray-400">Nothing found.</p>
+              </div>
+            </div>
+          )}
+
         <div
           ref={cardWrapperRef}
-          className="cards grid gap-3 md:grid-cols-2 md:gap-6 lg:grid-cols-3"
+          className="cards grid items-center gap-3 md:grid-cols-2 md:gap-6 lg:grid-cols-3"
         >
-          {gamesLoading && <div>Chargement...</div>}
-          {gamesError && <div>Erreur !</div>}
           {games?.results.bindings.map((game, i) => (
             <a
               key={i}
