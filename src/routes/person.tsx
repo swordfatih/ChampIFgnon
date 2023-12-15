@@ -6,13 +6,6 @@ export default function Person() {
 
   const { data } = useFindPerson(id);
   const person = data?.results.bindings[0];
-  const dateBirth = person?.dateBirth.value
-    ? new Date(person?.dateBirth.value)
-    : undefined;
-  let dateDeath;
-  if (person?.dateDeath) {
-    dateDeath = new Date(person?.dateDeath.value);
-  }
 
   return (
     <main className="layout min-h-screen w-full bg-black bg-fixed text-white selection:bg-white selection:text-black">
@@ -51,13 +44,13 @@ export default function Person() {
             {person?.dateBirth && (
               <p className="mx-2 text-xl text-gray-300 group-hover:text-white">
                 <b>Date de naissance : </b>
-                {dateBirth?.toLocaleDateString()}
+                {new Date(person?.dateBirth.value).toLocaleDateString()}
               </p>
             )}
             {person?.dateDeath && (
               <p className="mx-2 text-xl text-gray-300 group-hover:text-white">
                 <b>Date de mort : </b>
-                {dateDeath?.toLocaleDateString()}
+                {new Date(person?.dateDeath.value).toLocaleDateString()}
               </p>
             )}
 
