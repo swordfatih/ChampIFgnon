@@ -2,8 +2,7 @@ import "@/styles/layout.css";
 
 import React, { useState } from "react";
 import { useSearchGames } from "@/services/api/games";
-import { useFindAllGenders } from "@/services/api/gender";
-import { useFindAllPlatforms } from "@/services/api/platform";
+import { useFindAllProperty } from "@/services/api/search";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -29,10 +28,12 @@ export default function Home() {
   const [search, setSearch] = useSearchParamsState("search", params);
   const [gender, setGender] = useSearchParamsState("gender", params);
   const [platform, setPlatform] = useSearchParamsState("platform", params);
+  const [mechanism, setMechanism] = useSearchParamsState("mechanism", params);
   const [offset, setOffset] = useSearchParamsState("offset", params, 0);
 
-  const { data: genders } = useFindAllGenders();
-  const { data: platforms } = useFindAllPlatforms();
+  const { data: genders } = useFindAllProperty("P136");
+  const { data: platforms } = useFindAllProperty("P400");
+  const { data: mechanisms } = useFindAllProperty("P4151");
 
   const {
     data: games,
@@ -41,8 +42,11 @@ export default function Home() {
   } = useSearchGames({
     search,
     offset,
-    platform,
-    gender,
+    filters: [
+      ["P136", gender],
+      ["P400", platform],
+      ["P4151", mechanism],
+    ],
   });
 
   return (
@@ -93,12 +97,22 @@ export default function Home() {
 
                 <AdvancedSearch
                   data={platforms}
-                  placeholder="Platform"
+                  placeholder="Platforme"
                   onSelect={(result) =>
                     setPlatform(result?.value.split("/").slice(-1)[0] ?? "")
                   }
                   value={platform}
                   z={10}
+                />
+
+                <AdvancedSearch
+                  data={mechanisms}
+                  placeholder="Mechanisme de jeu"
+                  onSelect={(result) =>
+                    setMechanism(result?.value.split("/").slice(-1)[0] ?? "")
+                  }
+                  value={mechanism}
+                  z={9}
                 />
               </div>
             )}
@@ -149,8 +163,10 @@ export default function Home() {
       <section ref={featuresRef} className="container mt-10">
         <h2 className="mb-6 bg-gradient-to-r from-white to-gray-500 bg-clip-text text-center text-xl font-bold tracking-tighter text-transparent sm:text-3xl xl:text-4xl">
           Jeux
+          <p className="font-mono text-sm">
+            (résultats de {offset} à {(offset ?? 0) + 12})
+          </p>
         </h2>
-
         {gamesLoading && (
           <div className="flex w-full justify-center">
             <div className="w-fit">
@@ -158,7 +174,6 @@ export default function Home() {
             </div>
           </div>
         )}
-
         {(gamesError || !games || games.length === 0) && !gamesLoading && (
           <div className="flex w-full justify-center">
             <div className="flex w-fit flex-col items-center justify-center text-center">
@@ -167,14 +182,12 @@ export default function Home() {
             </div>
           </div>
         )}
-
         <div
           ref={cardWrapperRef}
           className="cards grid items-center gap-3 md:grid-cols-2 md:gap-6 lg:grid-cols-3"
         >
           {games?.map((game) => <GameCard key={game.id} game={game} />)}
         </div>
-
         <div className="mt-12 flex items-center justify-center gap-12">
           <button
             className="flex animate-bounce justify-center text-zinc-600 duration-150 hover:text-white"

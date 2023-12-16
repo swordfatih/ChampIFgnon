@@ -10,7 +10,7 @@ import type {
 } from "@/types/game";
 import type { SparRequest, SparResponse } from "@/types/sparql";
 
-async function searchGames({ search, gender, platform, offset }: SearchGames) {
+async function searchGames({ search, filters, offset }: SearchGames) {
   const query: SparRequest = {
     vars: ["id", "name", "logo", "description", "steamId"],
     triples: [
@@ -30,10 +30,9 @@ async function searchGames({ search, gender, platform, offset }: SearchGames) {
       },
     ],
     search,
-    tripleFilters: [
-      gender ? ["id", "wdt:P136", `wd:${gender}`] : undefined,
-      platform ? ["id", "wdt:P400", `wd:${platform}`] : undefined,
-    ],
+    tripleFilters: filters?.map((filter) =>
+      filter[1] ? ["id", `wdt:${filter[0]}`, `wd:${filter[1]}`] : undefined
+    ),
     limit: 12,
     offset,
   };

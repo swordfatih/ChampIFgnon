@@ -37,7 +37,6 @@ export type Creator = {
 
 export type SearchGames = {
   search?: string;
-  gender?: string;
-  platform?: string;
+  filters?: [string, string | undefined][];
   offset?: number;
 };

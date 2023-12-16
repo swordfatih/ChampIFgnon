@@ -5,13 +5,13 @@ import { useQuery } from "react-query";
 import type { SearchItem } from "@/types/search";
 import type { SparResponse } from "@/types/sparql";
 
-async function findAllPlatforms() {
+async function findAllProperty(property: string) {
   const query = format({
     distinct: true,
     vars: ["id", "name"],
     triples: [
       ["?game", "wdt:P31", "wd:Q7889"],
-      ["?game", "wdt:P400", "id"],
+      ["?game", `wdt:${property}`, "id"],
       ["id", "rdfs:label", "name"],
     ],
     langFilters: [
@@ -32,10 +32,10 @@ async function findAllPlatforms() {
   return data;
 }
 
-export function useFindAllPlatforms() {
+export function useFindAllProperty(property: string) {
   return useQuery({
-    queryKey: ["useFindAllPlatforms"],
-    queryFn: findAllPlatforms,
+    queryKey: ["useFindAllProperty", property],
+    queryFn: () => findAllProperty(property),
     select: (data): SearchItem[] =>
       data.results.bindings.map((result) => ({
         value: result.id.value,

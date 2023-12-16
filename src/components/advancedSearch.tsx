@@ -32,7 +32,9 @@ export function AdvancedSearch({
             label,
           })) || []
         }
-        value={data?.find((item) => item.value === value)}
+        value={
+          value ? data?.find((item) => item.value.includes(value)) : undefined
+        }
         onChange={onSelect}
         placeholder={placeholder}
         isClearable={true}

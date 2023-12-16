@@ -34,7 +34,7 @@ export function useSearchParamsState(
   const searchParamsState = acquiredSearchParam ?? defaultValue;
 
   const setSearchParamsState = (newState: any) => {
-    if (newState === undefined || newState.length === 0) {
+    if (newState === undefined || newState.length === 0 || newState === 0) {
       searchParams.delete(searchParamName);
       setSearchParams(searchParams);
       return;
