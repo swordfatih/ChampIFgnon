@@ -33,6 +33,12 @@ async function findMultipleProperty(id?: string, property?: string) {
         lang: "en",
       },
     ],
+    orders: [
+      {
+        subject: "name",
+        descending: false,
+      },
+    ],
   });
 
   const { data } = await api.wikidata.get<SparResponse>("sparql", {
