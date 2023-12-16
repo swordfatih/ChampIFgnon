@@ -3,6 +3,8 @@ export type Game = {
   name: string;
   logo?: string;
   description: string;
+  score?: string;
+  steamId?: string;
 };
 
 export type Website = {

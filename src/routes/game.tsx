@@ -10,6 +10,10 @@ export default function Game() {
   let { data: developers } = useFindCreators(id, "P178");
   const { data: genders } = useFindMultipleProperty(id, "P136");
   const { data: scores } = useFindMultipleProperty(id, "P737");
+  const { data: platforms } = useFindMultipleProperty(id, "P400");
+  const { data: distributors } = useFindMultipleProperty(id, "P750");
+  const { data: languages } = useFindMultipleProperty(id, "P407");
+  const { data: countries } = useFindMultipleProperty(id, "P495");
 
   publishers = publishers?.filter((publisher, index) => {
     return (
@@ -52,7 +56,19 @@ export default function Game() {
               <img className="h-full w-full" src={game?.logo} />
             </div>
           )}
-          {!game?.logo && (
+          {!game?.logo && game?.steamId && (
+            <div className="m-1 mb-3.5 h-1/2 w-1/2">
+              <img
+                className="h-full w-full"
+                src={
+                  "https://cdn.cloudflare.steamstatic.com/steam/apps/" +
+                  game.steamId +
+                  "/header.jpg"
+                }
+              />
+            </div>
+          )}
+          {!game?.logo && !game?.steamId && (
             <div className="m-1 mb-3.5 h-1/2 w-1/2">
               <img
                 className="h-full w-full"
@@ -62,6 +78,7 @@ export default function Game() {
           )}
 
           <div className="m-1 mb-3.5 h-1/2 w-1/2 flex-col p-2">
+            <p>debug : {game?.steamId}</p>
             {game?.website && (
               <div className="flex gap-2 text-xl text-gray-300 group-hover:text-white">
                 <p className="font-bold">website :</p>
@@ -136,6 +153,80 @@ export default function Game() {
                 >
                   {game?.score}
                 </a>
+              </div>
+            )}
+            <br />
+            {countries && countries.length > 1 && (
+              <div>
+                <p>
+                  <span className="text-xl font-bold text-gray-300 group-hover:text-white">
+                    Countries of origin :&nbsp;
+                  </span>
+                  {countries?.map((country) => (
+                    <span className="text-lg" key={country.item}>
+                      {country.name}&nbsp;,
+                    </span>
+                  ))}
+                </p>
+              </div>
+            )}
+            {countries && countries.length == 1 && (
+              <div>
+                <p>
+                  <span className="text-xl font-bold text-gray-300 group-hover:text-white">
+                    Country of origin :&nbsp;
+                  </span>
+                  {countries?.map((country) => (
+                    <span className="text-lg" key={country.item}>
+                      {country.name}
+                    </span>
+                  ))}
+                </p>
+              </div>
+            )}
+            <br />
+            {platforms && platforms.length > 0 && (
+              <div>
+                <p className="text-xl font-bold text-gray-300 group-hover:text-white">
+                  Playable on :
+                </p>
+                <ul>
+                  {platforms?.map((platform) => (
+                    <li className="text-lg" key={platform.item}>
+                      {platform.name}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            <br />
+            {distributors && distributors.length > 0 && (
+              <div>
+                <p className="text-xl font-bold text-gray-300 group-hover:text-white">
+                  Available on :
+                </p>
+                <ul>
+                  {distributors?.map((distributor) => (
+                    <li className="text-lg" key={distributor.item}>
+                      {distributor.name}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            <br />
+            {languages && languages.length > 0 && (
+              <div>
+                <p className="text-xl font-bold text-gray-300 group-hover:text-white">
+                  Available Languages :
+                </p>
+                <p>
+                  {languages?.map((language) => (
+                    <span className="text-lg" key={language.item}>
+                      {language.name},&nbsp;
+                    </span>
+                  ))}
+                </p>
               </div>
             )}
           </div>

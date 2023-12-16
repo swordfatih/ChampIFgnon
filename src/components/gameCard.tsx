@@ -38,7 +38,17 @@ export function GameCard({ game }: GameCardProps) {
               <img src={game.logo} />
             </div>
           )}
-
+          {!game.logo && game.steamId && (
+            <div className="mb-3.5 h-14 w-14">
+              <img
+                src={
+                  "https://cdn.cloudflare.steamstatic.com/steam/apps/" +
+                  game.steamId +
+                  "/capsule_184x69.jpg"
+                }
+              />
+            </div>
+          )}
           <h3 className="text-xl">
             <div className="flex h-full w-full items-center after:absolute after:inset-0">
               {game.name}
@@ -52,6 +62,12 @@ export function GameCard({ game }: GameCardProps) {
 
           <p className="mt-2 text-sm text-gray-300 group-hover:text-white">
             {game.description}
+          </p>
+          <p className="mt-2 text-sm text-gray-300 group-hover:text-white">
+            {game.score}
+          </p>
+          <p className="mt-2 text-sm text-gray-300 group-hover:text-white">
+            debug: {game.steamId}
           </p>
         </div>
       </div>
