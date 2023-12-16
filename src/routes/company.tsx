@@ -1,14 +1,18 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useSearchCompany } from "@/services/api/company";
+import { useFindBestGames } from "@/services/api/creator";
 import { useParams } from "react-router-dom";
 
 import type { Company } from "@/types/company";
+import GameCard from "@/components/gameCard";
 
 export default function Company() {
   const { id } = useParams();
 
   const { data } = useSearchCompany(id!);
   const company = data?.results.bindings[0];
+  const { data: bestGames } = useFindBestGames(id);
+  const cardWrapperRef = React.useRef<HTMLDivElement>(null);
 
   useEffect(() => {});
 
@@ -50,6 +54,19 @@ export default function Company() {
             Company Location: {company?.hq_city.value},{" "}
             {company?.hq_country.value}
           </h3>
+        </div>
+        <br />
+        {bestGames && (
+          <p className="mx-2 text-xl text-gray-300 group-hover:text-white">
+            <b>List of 3 best games : </b>
+          </p>
+        )}
+        <br />
+        <div
+          ref={cardWrapperRef}
+          className="cards grid items-center gap-3 md:grid-cols-2 md:gap-6 lg:grid-cols-3"
+        >
+          {bestGames?.map((game) => <GameCard key={game.id} game={game} />)}
         </div>
       </section>
     </main>

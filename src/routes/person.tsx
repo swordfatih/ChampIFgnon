@@ -84,7 +84,7 @@ export default function Person() {
             <br />
             {bestGames && (
               <p className="mx-2 text-xl text-gray-300 group-hover:text-white">
-                <b>List of games : </b>
+                <b>List of 3 best games : </b>
               </p>
             )}
             <br />

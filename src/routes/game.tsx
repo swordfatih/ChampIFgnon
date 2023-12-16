@@ -63,33 +63,21 @@ export default function Game() {
 
           <div className="m-1 mb-3.5 h-1/2 w-1/2 flex-col p-2">
             {game?.website && (
-              <div className="flex gap-2 text-xl font-bold text-gray-300 group-hover:text-white">
-                <p>Site web :</p>
+              <div className="flex gap-2 text-xl text-gray-300 group-hover:text-white">
+                <p className="font-bold">website :</p>
                 <a href={game.website} target="blank">
                   {game?.website}
                 </a>
               </div>
             )}
+            <br />
             {game?.date && (
-              <div className="flex gap-2 text-xl font-bold text-gray-300 group-hover:text-white">
-                <p>Date de sortie :</p>
+              <div className="flex gap-2 text-xl text-gray-300 group-hover:text-white">
+                <p className="font-bold">published date :</p>
                 {new Date(game?.date).toLocaleDateString()}
               </div>
             )}
-            {genders && genders.length > 0 && (
-              <div>
-                <p className="text-xl font-bold text-gray-300 group-hover:text-white">
-                  Genres :
-                </p>
-                <ul>
-                  {genders?.map((gender) => (
-                    <li className="text-lg" key={gender.item}>
-                      <a href={gender.item}>{gender.name}</a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+            <br />
             {genders && genders.length > 0 && (
               <div>
                 <p className="text-xl font-bold text-gray-300 group-hover:text-white">
@@ -105,7 +93,10 @@ export default function Game() {
               </div>
             )}
             {genders?.map((gender) => <p>{gender.name}</p>)}
-            <h2>Publishers</h2>
+            <br />
+            <p className="text-xl font-bold text-gray-300 group-hover:text-white">
+              Publishers :
+            </p>
             {publishers?.map((pub) => (
               <a
                 className="block"
@@ -118,7 +109,10 @@ export default function Game() {
                 {pub.name}
               </a>
             ))}
-            <h2>Developers</h2>
+            <br />
+            <p className="text-xl font-bold text-gray-300 group-hover:text-white">
+              Developers :
+            </p>
             {developers?.map((dev) => (
               <a
                 className="block"
