@@ -125,6 +125,19 @@ export default function Game() {
                 {dev.name}
               </a>
             ))}
+            <br />
+            {game?.score && (
+              <div className="flex gap-2 text-xl text-gray-300 group-hover:text-white">
+                <p className="font-bold">score :</p>
+                <a
+                  className="text-blue-600 underline"
+                  href={"https://opencritic.com/game/" + game?.critId + "/-"}
+                  target="_blank"
+                >
+                  {game?.score}
+                </a>
+              </div>
+            )}
           </div>
         </div>
       </section>

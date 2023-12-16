@@ -2,7 +2,12 @@ import api from "@/services/api/axios";
 import { format } from "@/services/api/sparql";
 import { useQuery } from "react-query";
 
-import type { Game, GameUniqueDetails, SearchGames, Creator } from "@/types/game";
+import type {
+  Creator,
+  Game,
+  GameUniqueDetails,
+  SearchGames,
+} from "@/types/game";
 import type { SparRequest, SparResponse } from "@/types/sparql";
 
 async function searchGames({ filter, gender, offset }: SearchGames) {
@@ -70,7 +75,17 @@ async function findGame(id?: string) {
   }
 
   const query = format({
-    vars: ["id", "name", "logo", "date", "website", "description"],
+    vars: [
+      "id",
+      "name",
+      "logo",
+      "date",
+      "website",
+      "description",
+      "score",
+      "critId",
+      "statement",
+    ],
     triples: [
       ["id", "rdfs:label", "?name"],
       ["id", "schema:description", "?description"],
@@ -79,6 +94,13 @@ async function findGame(id?: string) {
       [["id", "wdt:P154", "logo"]],
       [["id", "wdt:P577", "date"]],
       [["id", "wdt:P856", "website"]],
+      [
+        ["id", "p:P444", "statement"],
+        ["statement", "pq:P447", "wd:Q21039459"],
+        ["statement", "pq:P459", "wd:Q114712322"],
+        ["statement", "ps:P444", "score"],
+        ["id", "wdt:P2864", "critId"],
+      ],
     ],
     binds: [
       {
@@ -115,7 +137,7 @@ async function findGame(id?: string) {
 
 export function useFindGame(id?: string) {
   return useQuery({
-    queryKey: ["useFindGames", id],
+    queryKey: ["useFindGame", id],
     queryFn: () => findGame(id),
     select: (data): GameUniqueDetails | undefined => {
       const game = data?.results.bindings[0];
@@ -127,6 +149,8 @@ export function useFindGame(id?: string) {
             logo: game.logo?.value,
             website: game.website?.value,
             date: game.date?.value,
+            score: game.score?.value,
+            critId: game.critId?.value,
           }
         : undefined;
     },

@@ -13,6 +13,8 @@ export type Website = {
 export type GameUniqueDetails = Game & {
   website?: string;
   date?: string;
+  score?: string;
+  critId?: string;
 };
 
 export type HumanCreator = {
