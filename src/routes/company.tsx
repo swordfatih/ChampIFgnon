@@ -34,22 +34,24 @@ export default function Company() {
           </div>
           <h3>
             {company?.inception
-              ? "Creation Year: " +
-                new Date(Date.parse(company?.inception.value))
+              ? `Creation Year: ${new Date(Date.parse(company?.inception.value))
                   .getFullYear()
-                  .toString()
+                  .toString()}`
               : ""}
           </h3>
-          <div className="flex gap-x-2">
-            <h3>Company's website:</h3>
-            <a
-              className="text-blue-600 underline"
-              href={company?.website.value}
-              target="_blank"
-            >
-              {company?.website.value}
-            </a>
-          </div>
+          {company?.website && (
+            <div className="flex gap-x-2">
+              <h3>Company's website:</h3>
+              <a
+                className="text-blue-600 underline"
+                href={company?.website.value}
+                target="_blank"
+              >
+                {company?.website.value}
+              </a>
+            </div>
+          )}
+
           <h3>
             Company Location: {company?.hq_city.value},{" "}
             {company?.hq_country.value}
