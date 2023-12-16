@@ -2,7 +2,7 @@
   "name": "react-template-vite",
   "private": true,
   "version": "0.1.0",
-  "homepage": "https://swordfatih.github.io/ChampIFgnon",
+  "homepage": "https://swordfatih.github.io/ChampIFgnon/#",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",

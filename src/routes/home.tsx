@@ -54,7 +54,7 @@ export default function Home() {
     <>
       <section className="container px-4 py-12 md:px-6 md:pt-24 lg:pt-32 xl:pt-48">
         <img
-          src="/assets/logo.png"
+          src="/ChampIFgnon/assets/logo.png"
           alt="MIFcromania logo"
           height={150}
           width={150}
