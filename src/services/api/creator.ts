@@ -21,7 +21,6 @@ async function findBestGames(id?: string) {
       "description",
     ],
     triples: [
-      ["game", "wdt:P178", "creator"],
       ["game", "wdt:P31", "wd:Q7889"],
       ["game", "rdfs:label", "name"],
       ["game", "schema:description", "?description"],
