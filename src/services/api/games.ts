@@ -43,6 +43,25 @@ async function searchGames({ search, filters, offset }: SearchGames) {
     },
   });
 
+  if (search && data && data.results.bindings.length === 0) {
+    query.search = undefined;
+    query.textFilters = [
+      {
+        filter: `.*${search}.*`,
+        value: "name",
+        attributes: "i",
+      },
+    ];
+
+    const { data } = await api.wikidata.get<SparResponse>("sparql", {
+      params: {
+        query: format(query),
+      },
+    });
+
+    return data;
+  }
+
   return data;
 }
 

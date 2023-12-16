@@ -2,6 +2,8 @@ import { useFindCreators, useFindGame } from "@/services/api/games";
 import { useFindMultipleProperty } from "@/services/api/object";
 import { useParams } from "react-router-dom";
 
+import { getSteamImage } from "@/lib/steam";
+
 export default function Game() {
   const { id } = useParams();
 
@@ -9,11 +11,13 @@ export default function Game() {
   let { data: publishers } = useFindCreators(id, "P123");
   let { data: developers } = useFindCreators(id, "P178");
   const { data: genders } = useFindMultipleProperty(id, "P136");
-  const { data: scores } = useFindMultipleProperty(id, "P737");
   const { data: platforms } = useFindMultipleProperty(id, "P400");
   const { data: distributors } = useFindMultipleProperty(id, "P750");
   const { data: languages } = useFindMultipleProperty(id, "P407");
   const { data: countries } = useFindMultipleProperty(id, "P495");
+
+  const notFoundUrl =
+    "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fpicturesofmaidenhead.files.wordpress.com%2F2019%2F01%2Fimage-not-found.jpg&f=1&nofb=1&ipt=c7f29bbe09abe700f04cd1938142fdf590986b85187de4571b91d75adfde5afd&ipo=images";
 
   publishers = publishers?.filter((publisher, index) => {
     return (
@@ -51,34 +55,14 @@ export default function Game() {
 
       <section className="container px-4 py-12 md:px-2 md:pt-4 lg:pt-8 xl:pt-12">
         <div className="flex h-full w-full overflow-hidden rounded-md p-4">
-          {game?.logo && (
-            <div className="m-1 mb-3.5 h-1/2 w-1/2">
-              <img className="h-full w-full" src={game?.logo} />
-            </div>
-          )}
-          {!game?.logo && game?.steamId && (
-            <div className="m-1 mb-3.5 h-1/2 w-1/2">
-              <img
-                className="h-full w-full"
-                src={
-                  "https://cdn.cloudflare.steamstatic.com/steam/apps/" +
-                  game.steamId +
-                  "/header.jpg"
-                }
-              />
-            </div>
-          )}
-          {!game?.logo && !game?.steamId && (
-            <div className="m-1 mb-3.5 h-1/2 w-1/2">
-              <img
-                className="h-full w-full"
-                src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fpicturesofmaidenhead.files.wordpress.com%2F2019%2F01%2Fimage-not-found.jpg&f=1&nofb=1&ipt=c7f29bbe09abe700f04cd1938142fdf590986b85187de4571b91d75adfde5afd&ipo=images"
-              />
-            </div>
-          )}
+          <div className="m-1 mb-3.5 h-1/2 w-1/2">
+            <img
+              className="h-full w-full object-cover"
+              src={getSteamImage(game?.steamId) ?? game?.logo ?? notFoundUrl}
+            />
+          </div>
 
-          <div className="m-1 mb-3.5 h-1/2 w-1/2 flex-col p-2">
-            <p>debug : {game?.steamId}</p>
+          <div className="px m-1 mb-3.5 flex h-1/2 w-1/2 flex-col gap-4 p-2">
             {game?.website && (
               <div className="flex gap-2 text-xl text-gray-300 group-hover:text-white">
                 <p className="font-bold">website :</p>
@@ -87,21 +71,21 @@ export default function Game() {
                 </a>
               </div>
             )}
-            <br />
+
             {game?.date && (
               <div className="flex gap-2 text-xl text-gray-300 group-hover:text-white">
                 <p className="font-bold">published date :</p>
                 {new Date(game?.date).toLocaleDateString()}
               </div>
             )}
-            <br />
+
             {genders && genders.length > 0 && (
               <div>
                 <p className="text-xl font-bold text-gray-300 group-hover:text-white">
                   Genres :
                 </p>
                 <ul>
-                  {scores?.map((gender) => (
+                  {genders?.map((gender) => (
                     <li className="text-lg" key={gender.item}>
                       <a href={gender.item}>{gender.name}</a>
                     </li>
@@ -109,13 +93,14 @@ export default function Game() {
                 </ul>
               </div>
             )}
-            {genders?.map((gender) => <p>{gender.name}</p>)}
-            <br />
+
             <p className="text-xl font-bold text-gray-300 group-hover:text-white">
               Publishers :
             </p>
+
             {publishers?.map((pub) => (
               <a
+                key={pub.id}
                 className="block"
                 href={`/${
                   pub.type.split("/").slice(-1)[0] == "Q5"
@@ -126,12 +111,14 @@ export default function Game() {
                 {pub.name}
               </a>
             ))}
-            <br />
+
             <p className="text-xl font-bold text-gray-300 group-hover:text-white">
               Developers :
             </p>
+
             {developers?.map((dev) => (
               <a
+                key={dev.id}
                 className="block"
                 href={`/${
                   dev.type.split("/").slice(-1)[0] == "Q5"
@@ -142,20 +129,20 @@ export default function Game() {
                 {dev.name}
               </a>
             ))}
-            <br />
+
             {game?.score && (
               <div className="flex gap-2 text-xl text-gray-300 group-hover:text-white">
                 <p className="font-bold">score :</p>
                 <a
                   className="text-blue-600 underline"
-                  href={"https://opencritic.com/game/" + game?.critId + "/-"}
+                  href={`https://opencritic.com/game/${game?.critId}/-`}
                   target="_blank"
                 >
                   {game?.score}
                 </a>
               </div>
             )}
-            <br />
+
             {countries && countries.length > 1 && (
               <div>
                 <p>
@@ -184,7 +171,7 @@ export default function Game() {
                 </p>
               </div>
             )}
-            <br />
+
             {platforms && platforms.length > 0 && (
               <div>
                 <p className="text-xl font-bold text-gray-300 group-hover:text-white">
@@ -192,14 +179,14 @@ export default function Game() {
                 </p>
                 <ul>
                   {platforms?.map((platform) => (
-                    <li className="text-lg" key={platform.item}>
+                    <li key={platform.item} className="text-lg">
                       {platform.name}
                     </li>
                   ))}
                 </ul>
               </div>
             )}
-            <br />
+
             {distributors && distributors.length > 0 && (
               <div>
                 <p className="text-xl font-bold text-gray-300 group-hover:text-white">
@@ -214,7 +201,6 @@ export default function Game() {
                 </ul>
               </div>
             )}
-            <br />
             {languages && languages.length > 0 && (
               <div>
                 <p className="text-xl font-bold text-gray-300 group-hover:text-white">

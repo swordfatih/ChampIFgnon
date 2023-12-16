@@ -2,6 +2,7 @@ import { MoveUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import type { Game } from "@/types/game";
+import { getSteamImage } from "@/lib/steam";
 
 type GameCardProps = {
   game: Game;
@@ -17,9 +18,7 @@ export function GameCard({ game }: GameCardProps) {
         className="absolute inset-[1px] z-[2] flex flex-col gap-2.5 rounded-xl bg-[#141414] bg-contain p-2.5"
         style={{
           backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(${
-            game.steamId
-              ? `https://cdn.cloudflare.steamstatic.com/steam/apps/${game.steamId}/header.jpg`
-              : game.logo
+            getSteamImage(game.steamId) ?? game.logo
           })`,
           backgroundSize: "100% 100%",
         }}

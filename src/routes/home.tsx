@@ -76,7 +76,7 @@ export default function Home() {
 
                 <input
                   className="w-full truncate bg-transparent"
-                  value={search && search.length > 0 ? search : undefined}
+                  value={search ?? ""}
                   onChange={(e) => setSearch(e.target.value)}
                 />
               </p>

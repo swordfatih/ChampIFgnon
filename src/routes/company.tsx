@@ -34,10 +34,9 @@ export default function Company() {
           </div>
           <h3>
             {company?.inception
-              ? "Creation Year: " +
-                new Date(Date.parse(company?.inception.value))
+              ? `Creation Year: ${new Date(Date.parse(company?.inception.value))
                   .getFullYear()
-                  .toString()
+                  .toString()}`
               : ""}
           </h3>
           <div className="flex gap-x-2">
