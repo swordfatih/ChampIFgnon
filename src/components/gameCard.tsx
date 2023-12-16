@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 import type { Game } from "@/types/game";
 import { getSteamImage } from "@/lib/steam";
+import Rating from "@/components/rating";
 
 type GameCardProps = {
   game: Game;
@@ -50,15 +51,21 @@ export function GameCard({ game }: GameCardProps) {
           >
             {game.description}
           </p>
-          <p
-            className="mt-2 text-sm text-gray-300 group-hover:text-white"
-            style={{
-              textShadow:
-                "0.07em 0 black, 0 0.07em black, -0.07em 0 black, 0 -0.07em black",
-            }}
-          >
-            {game.score}
-          </p>
+          {game.score && (
+            <div
+              className="mt-2 flex items-center gap-2 text-sm text-gray-300 group-hover:text-white"
+              style={{
+                textShadow:
+                  "0.07em 0 black, 0 0.07em black, -0.07em 0 black, 0 -0.07em black",
+              }}
+            >
+              <Rating
+                value={(parseInt(game.score) * 5) / 100}
+                color="yellow"
+                size={20}
+              />
+            </div>
+          )}
         </div>
       </div>
     </Link>

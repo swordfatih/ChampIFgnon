@@ -7,6 +7,7 @@ import { QueryClientProvider } from "react-query";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import Error from "@/components/error";
+import PageLayout from "@/components/page-layout";
 import RootLayout from "@/components/root-layout";
 
 const router = createBrowserRouter([
@@ -19,16 +20,21 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/game/:id",
-        element: <Game />,
-      },
-      {
-        path: "/company/:id",
-        element: <Company />,
-      },
-      {
-        path: "/person/:id",
-        element: <Person />,
+        element: <PageLayout />,
+        children: [
+          {
+            path: "/game/:id",
+            element: <Game />,
+          },
+          {
+            path: "/company/:id",
+            element: <Company />,
+          },
+          {
+            path: "/person/:id",
+            element: <Person />,
+          },
+        ],
       },
     ],
   },

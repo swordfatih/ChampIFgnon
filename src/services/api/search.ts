@@ -5,13 +5,14 @@ import { useQuery } from "react-query";
 import type { SearchItem } from "@/types/search";
 import type { SparResponse } from "@/types/sparql";
 
-async function findAllProperty(property: string) {
+async function findAllProperty(property: string, limit: number) {
   const query = format({
     distinct: true,
     vars: ["id", "name"],
     triples: [
       ["?game", "wdt:P31", "wd:Q7889"],
-      ["?game", `wdt:${property}`, "id"],
+      ["?game", `p:${property}`, "?statement"],
+      ["?statement", `ps:${property}`, "id"],
       ["id", "rdfs:label", "name"],
     ],
     langFilters: [
@@ -20,7 +21,7 @@ async function findAllProperty(property: string) {
         lang: "en",
       },
     ],
-    limit: 200,
+    limit,
   });
 
   const { data } = await api.wikidata.get<SparResponse>("sparql", {
@@ -32,10 +33,10 @@ async function findAllProperty(property: string) {
   return data;
 }
 
-export function useFindAllProperty(property: string) {
+export function useFindAllProperty(property: string, limit: number = 200) {
   return useQuery({
-    queryKey: ["useFindAllProperty", property],
-    queryFn: () => findAllProperty(property),
+    queryKey: ["useFindAllProperty", property, limit],
+    queryFn: () => findAllProperty(property, limit),
     select: (data): SearchItem[] =>
       data.results.bindings.map((result) => ({
         value: result.id.value,

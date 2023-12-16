@@ -12,13 +12,23 @@ import type { SparRequest, SparResponse } from "@/types/sparql";
 
 async function searchGames({ search, filters, offset }: SearchGames) {
   const query: SparRequest = {
-    vars: ["id", "name", "logo", "description", "steamId"],
+    vars: ["id", "name", "logo", "description", "steamId", "score"],
     triples: [
       ["id", "wdt:P31", "wd:Q7889"],
       ["id", "rdfs:label", "name"],
       ["id", "schema:description", "description"],
     ],
-    optionals: [[["id", "wdt:P154", "logo"]], [["id", "wdt:P1733", "steamId"]]],
+    optionals: [
+      [["id", "wdt:P154", "logo"]],
+      [["id", "wdt:P1733", "steamId"]],
+      [
+        ["id", "p:P444", "?statement"],
+        ["?statement", "pq:P447", "wd:Q21039459"],
+        ["?statement", "pq:P459", "wd:Q114712322"],
+        ["?statement", "ps:P444", "score"],
+      ],
+    ],
+    distinct: true,
     langFilters: [
       {
         value: "name",
@@ -30,8 +40,8 @@ async function searchGames({ search, filters, offset }: SearchGames) {
       },
     ],
     search,
-    tripleFilters: filters?.map((filter) =>
-      filter[1] ? ["id", `wdt:${filter[0]}`, `wd:${filter[1]}`] : undefined
+    tripleFilters: filters?.map(({ id, state: [value, _] }) =>
+      value ? ["id", `wdt:${id}`, `wd:${value}`] : undefined
     ),
     limit: 12,
     offset,
@@ -76,6 +86,7 @@ export function useSearchGames(query: SearchGames) {
         description: game.description.value,
         logo: game.logo?.value,
         steamId: game.steamId?.value,
+        score: game.score?.value,
       })),
   });
 }
@@ -177,12 +188,17 @@ async function findCreators(id?: string, property?: string) {
   }
 
   const query = format({
-    vars: ["id", "item", "name", "type"],
+    vars: ["id", "item", "name", "person"],
     triples: [
       ["id", `p:${property}`, "?statement"],
       ["?statement", `ps:${property}`, "item"],
       ["item", "rdfs:label", "name"],
-      ["item", "wdt:P31", "type"],
+    ],
+    optionals: [
+      [
+        ["item", "wdt:P31", "person"],
+        ["item", "wdt:P31", "wd:Q5"],
+      ],
     ],
     binds: [
       {
@@ -213,9 +229,9 @@ export function useFindCreators(id?: string, property?: string) {
     queryFn: () => findCreators(id, property),
     select: (data): Creator[] | undefined =>
       data?.results.bindings.map((result) => ({
-        id: result.item.value,
+        item: result.item.value,
         name: result.name.value,
-        type: result.type.value,
+        person: result.type?.value !== undefined,
       })),
   });
 }

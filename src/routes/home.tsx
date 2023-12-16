@@ -1,19 +1,19 @@
 import "@/styles/layout.css";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSearchGames } from "@/services/api/games";
-import { useFindAllProperty } from "@/services/api/search";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
   FlameKindling,
-  Github,
   Mouse,
+  Trash,
 } from "lucide-react";
 import { BiMessageSquareError } from "react-icons/bi";
 import { InfinitySpin } from "react-loader-spinner";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
+import { useFilters } from "@/hooks/use-filters";
 import { useSearchParamsState } from "@/hooks/use-search-params-state";
 import AdvancedSearch from "@/components/advancedSearch";
 import GameCard from "@/components/gameCard";
@@ -25,14 +25,9 @@ export default function Home() {
 
   const params = useSearchParams();
   const [search, setSearch] = useSearchParamsState("search", params);
-  const [gender, setGender] = useSearchParamsState("gender", params);
-  const [platform, setPlatform] = useSearchParamsState("platform", params);
-  const [mechanism, setMechanism] = useSearchParamsState("mechanism", params);
   const [offset, setOffset] = useSearchParamsState("offset", params, 0);
 
-  const { data: genders } = useFindAllProperty("P136");
-  const { data: platforms } = useFindAllProperty("P400");
-  const { data: mechanisms } = useFindAllProperty("P4151");
+  const filters = useFilters(params);
 
   const {
     data: games,
@@ -41,15 +36,22 @@ export default function Home() {
   } = useSearchGames({
     search,
     offset,
-    filters: [
-      ["P136", gender],
-      ["P400", platform],
-      ["P4151", mechanism],
-    ],
+    filters,
   });
 
+  useEffect(() => {
+    const anchor = window.location.hash.slice(1);
+
+    if (games && anchor) {
+      const element = document.getElementById(anchor);
+      if (element) {
+        element.scrollIntoView();
+      }
+    }
+  }, [games]);
+
   return (
-    <main className="layout w-full bg-black bg-fixed text-white selection:bg-white selection:text-black">
+    <>
       <section className="container px-4 py-12 md:px-6 md:pt-24 lg:pt-32 xl:pt-48">
         <img
           src="/assets/logo.png"
@@ -84,67 +86,41 @@ export default function Home() {
 
             {advanced && (
               <div className="flex flex-col gap-4">
-                <AdvancedSearch
-                  data={genders}
-                  placeholder="Genre"
-                  onSelect={(result) =>
-                    setGender(result?.value.split("/").slice(-1)[0] ?? "")
-                  }
-                  value={gender}
-                  z={11}
-                />
-
-                <AdvancedSearch
-                  data={platforms}
-                  placeholder="Platforme"
-                  onSelect={(result) =>
-                    setPlatform(result?.value.split("/").slice(-1)[0] ?? "")
-                  }
-                  value={platform}
-                  z={10}
-                />
-
-                <AdvancedSearch
-                  data={mechanisms}
-                  placeholder="Mechanisme de jeu"
-                  onSelect={(result) =>
-                    setMechanism(result?.value.split("/").slice(-1)[0] ?? "")
-                  }
-                  value={mechanism}
-                  z={9}
-                />
+                {filters.map(({ id, state, data, label }, index) => (
+                  <AdvancedSearch
+                    key={id}
+                    data={data}
+                    placeholder={label}
+                    onSelect={(result) =>
+                      state[1](result?.value.split("/").slice(-1)[0] ?? "")
+                    }
+                    value={state[0]}
+                    z={20 - index}
+                  />
+                ))}
               </div>
             )}
 
             <div className="flex flex-col items-center justify-center gap-4 md:flex-row">
               <button
-                className="flex rounded-full border border-zinc-700 px-6 py-3 duration-300 hover:bg-white/10 hover:shadow-md hover:shadow-black"
+                className="flex items-center rounded-full border border-zinc-700 px-6 py-3 duration-300 hover:bg-white/10 hover:shadow-md hover:shadow-black"
                 style={{
                   backgroundColor: advanced ? "#555555" : "transparent",
                 }}
-                onClick={() => {
-                  if (advanced) {
-                    setGender("");
-                    setPlatform("");
-                    setAdvanced(false);
-                  } else {
-                    setAdvanced(true);
-                  }
-                }}
+                onClick={() => setAdvanced(!advanced)}
               >
                 <FlameKindling className="mr-2 h-5 w-5" />
                 Recherche avancée
               </button>
 
-              <a
-                href="https://github.com/swordfatih/ChampIFgnon/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex rounded-full border border-zinc-700 px-6 py-3 duration-300 hover:bg-white/10 hover:shadow-md hover:shadow-black"
+              <Link
+                to="/"
+                reloadDocument
+                className="flex items-center rounded-full border border-zinc-700 px-6 py-3 duration-300 hover:bg-white/10 hover:shadow-md hover:shadow-black"
               >
-                <Github className="mr-2 h-5 w-5 " />
-                Voir notre repo
-              </a>
+                <Trash className="mr-2 h-5 w-5 " />
+                Effacer la recherche
+              </Link>
             </div>
           </div>
         </div>
@@ -159,7 +135,7 @@ export default function Home() {
         <Mouse strokeWidth={1} className="h-10 w-10" />
       </button>
 
-      <section ref={featuresRef} className="container mt-10">
+      <section ref={featuresRef} className="container mt-10" id="results">
         <h2 className="mb-6 bg-gradient-to-r from-white to-gray-500 bg-clip-text text-center text-xl font-bold tracking-tighter text-transparent sm:text-3xl xl:text-4xl">
           Jeux
           <p className="font-mono text-sm">
@@ -200,24 +176,11 @@ export default function Home() {
           </div>
         )}
         <div className="cards grid items-center gap-3 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
-          {games?.map((game) => <GameCard key={game.id} game={game} />)}
+          {games?.map((game) => (
+            <GameCard key={game.id + game.logo} game={game} />
+          ))}
         </div>
       </section>
-
-      <footer className="container mt-10 grid place-items-center pb-4 text-neutral-400">
-        <span className="flex items-center gap-1">
-          &copy;
-          <span>{new Date().getFullYear()}</span>
-          <a
-            href="https://github.com/rajput-hemant"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline-offset-4 duration-200 hover:text-white hover:underline"
-          >
-            Hexanome 2 - 4IF
-          </a>
-        </span>
-      </footer>
-    </main>
+    </>
   );
 }

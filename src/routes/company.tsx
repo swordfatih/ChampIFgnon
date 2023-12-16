@@ -17,7 +17,7 @@ export default function Company() {
   useEffect(() => {});
 
   return (
-    <main className="layout min-h-screen w-full bg-black bg-fixed text-white selection:bg-white selection:text-black">
+    <>
       <section className="container px-4 py-12 md:px-6 md:pt-12 lg:pt-16 xl:pt-24">
         <div className="grid items-center gap-6">
           <div className="flex flex-col justify-center space-y-4 text-center">
@@ -71,6 +71,6 @@ export default function Company() {
           {bestGames?.map((game) => <GameCard key={game.id} game={game} />)}
         </div>
       </section>
-    </main>
+    </>
   );
 }

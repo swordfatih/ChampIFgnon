@@ -1,3 +1,5 @@
+import type { SearchFilter } from "@/types/search";
+
 export type Game = {
   id: string;
   name: string;
@@ -30,13 +32,13 @@ export type HumanCreator = {
 };
 
 export type Creator = {
-  id: string;
+  item: string;
   name: string;
-  type: string;
+  person: boolean;
 };
 
 export type SearchGames = {
   search?: string;
-  filters?: [string, string | undefined][];
+  filters?: SearchFilter[];
   offset?: number;
 };
