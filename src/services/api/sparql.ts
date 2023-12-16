@@ -1,4 +1,10 @@
-import { Generator, type SelectQuery, type Triple } from "sparqljs";
+import {
+  Generator,
+  Parser,
+  type Query,
+  type SelectQuery,
+  type Triple,
+} from "sparqljs";
 
 import type {
   SparLangFilter,
@@ -6,6 +12,45 @@ import type {
   SparTextFilter,
   SparTriple,
 } from "@/types/sparql";
+
+function searchTemplate(property: string, search: string) {
+  return `
+    PREFIX wd: <http://www.wikidata.org/entity/>
+    PREFIX wds: <http://www.wikidata.org/entity/statement/>
+    PREFIX wdv: <http://www.wikidata.org/value/>
+    PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+    PREFIX wikibase: <http://wikiba.se/ontology#>
+    PREFIX p: <http://www.wikidata.org/prop/>
+    PREFIX ps: <http://www.wikidata.org/prop/statement/>
+    PREFIX pq: <http://www.wikidata.org/prop/qualifier/>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema>
+    PREFIX bd: <http://www.bigdata.com/rdf>
+    PREFIX mwapi: <https://www.mediawiki.org/ontology#API/> 
+    PREFIX schema: <http://schema.org/>
+
+    SELECT DISTINCT ?item ?name ?description ?logo
+    WHERE
+    {
+      SERVICE wikibase:mwapi
+      {
+        bd:serviceParam wikibase:endpoint "www.wikidata.org";
+        wikibase:api "EntitySearch";
+        mwapi:search "${search}"; 
+        mwapi:language "en".
+        ?${property} wikibase:apiOutputItem mwapi:item.
+      }
+    }
+  `;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function isQuery(query: any): query is Query {
+  if ((query as Query).where) {
+    return true;
+  }
+
+  return false;
+}
 
 export const template: SelectQuery = {
   queryType: "SELECT",
@@ -16,10 +61,14 @@ export const template: SelectQuery = {
     rdf: "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
     foaf: "http://xmlns.com/foaf/0.1/",
     dc: "http://purl.org/dc/elements/1.1/",
-    // http://dbpedia.org/resource/
+    dbr: "http://dbpedia.org/resource/",
     dbpedia2: "http://dbpedia.org/property/",
     dpedia: "http://dbpedia.org/",
     skos: "http://www.w3.org/2004/02/skos/core#",
+    wikibase: "http://wikiba.se/ontology#",
+    mwapi: "https://www.mediawiki.org/ontology#API/",
+    schema: "http://schema.org/",
+    bd: "http://www.bigdata.com/rdf",
   },
   variables: [],
   type: "query",
@@ -68,13 +117,15 @@ export function format({
   optionals,
   langFilters,
   textFilters,
+  tripleFilters,
   groups,
   concats,
   binds,
   distinct,
   unions,
+  search,
 }: SparRequest) {
-  const generator = new Generator({});
+  const generator = new Generator();
 
   const request = template;
   request.variables = vars.map((value) => ({
@@ -169,6 +220,28 @@ export function format({
     });
   }
 
+  if (tripleFilters) {
+    request.where.push({
+      type: "bgp",
+      triples: formatTriples(
+        vars,
+        tripleFilters.flatMap((triple) => (triple ? [triple] : []))
+      ),
+    });
+  }
+
+  if (search) {
+    const query = searchTemplate("id", search);
+    const parser = new Parser({});
+    const result = parser.parse(query);
+
+    if (isQuery(result)) {
+      if (result.where) {
+        request.where.push(result.where[0]);
+      }
+    }
+  }
+
   request.where.push({
     type: "bgp",
     triples: formatTriples(vars, triples),
@@ -259,5 +332,9 @@ export function format({
     });
   });
 
-  return generator.stringify(request).replace(/</g, "").replace(/>/g, "");
+  return generator
+    .stringify(request)
+    .replace(/</g, "")
+    .replace(/>/g, "")
+    .replace(/^PREFIX.*$/gm, "");
 }

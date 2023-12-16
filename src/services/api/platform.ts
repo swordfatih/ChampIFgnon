@@ -5,13 +5,13 @@ import { useQuery } from "react-query";
 import type { SearchItem } from "@/types/search";
 import type { SparResponse } from "@/types/sparql";
 
-async function findAllGenders() {
+async function findAllPlatforms() {
   const query = format({
     distinct: true,
     vars: ["id", "name"],
     triples: [
       ["?game", "wdt:P31", "wd:Q7889"],
-      ["?game", "wdt:P136", "id"],
+      ["?game", "wdt:P400", "id"],
       ["id", "rdfs:label", "name"],
     ],
     langFilters: [
@@ -32,10 +32,10 @@ async function findAllGenders() {
   return data;
 }
 
-export function useFindAllGenders() {
+export function useFindAllPlatforms() {
   return useQuery({
-    queryKey: ["useFindAllGenders"],
-    queryFn: findAllGenders,
+    queryKey: ["useFindAllPlatforms"],
+    queryFn: findAllPlatforms,
     select: (data): SearchItem[] =>
       data.results.bindings.map((result) => ({
         value: result.id.value,

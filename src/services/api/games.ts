@@ -10,9 +10,10 @@ import type {
 } from "@/types/game";
 import type { SparRequest, SparResponse } from "@/types/sparql";
 
-async function searchGames({ filter, gender, offset }: SearchGames) {
+async function searchGames({ search, gender, platform, offset }: SearchGames) {
   const query: SparRequest = {
     vars: ["id", "name", "logo", "description"],
+    distinct: true,
     triples: [
       ["id", "wdt:P31", "wd:Q7889"],
       ["id", "rdfs:label", "name"],
@@ -29,22 +30,14 @@ async function searchGames({ filter, gender, offset }: SearchGames) {
         lang: "en",
       },
     ],
-    textFilters: filter
-      ? [
-          {
-            value: "name",
-            filter: `.*${filter}.*`,
-            attributes: "i",
-          },
-        ]
-      : undefined,
+    search,
+    tripleFilters: [
+      gender ? ["id", "wdt:P136", `wd:${gender}`] : undefined,
+      platform ? ["id", "wdt:P400", `wd:${platform}`] : undefined,
+    ],
     limit: 12,
-    offset: offset,
+    offset,
   };
-
-  if (gender) {
-    query.triples.push(["id", "wdt:P136", `wd:${gender}`]);
-  }
 
   const { data } = await api.wikidata.get<SparResponse>("sparql", {
     params: {

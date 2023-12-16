@@ -3,6 +3,7 @@ import "@/styles/layout.css";
 import React, { useState } from "react";
 import { useSearchGames } from "@/services/api/games";
 import { useFindAllGenders } from "@/services/api/gender";
+import { useFindAllPlatforms } from "@/services/api/platform";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -12,26 +13,35 @@ import {
 } from "lucide-react";
 import { BiMessageSquareError } from "react-icons/bi";
 import { InfinitySpin } from "react-loader-spinner";
-import { ReactSearchAutocomplete } from "react-search-autocomplete";
+import { useSearchParams } from "react-router-dom";
 
+import { useSearchParamsState } from "@/hooks/use-search-params-state";
+import AdvancedSearch from "@/components/advancedSearch";
 import GameCard from "@/components/gameCard";
 
 export default function Home() {
-  const [searchText, setSearchText] = useState("");
   const featuresRef = React.useRef<HTMLDivElement>(null);
   const cardWrapperRef = React.useRef<HTMLDivElement>(null);
-  const [offset, setOffset] = useState(0);
-  const [gender, setGender] = useState<string>();
+
+  const [advanced, setAdvanced] = useState(false);
+
+  const params = useSearchParams();
+  const [search, setSearch] = useSearchParamsState("search", params);
+  const [gender, setGender] = useSearchParamsState("gender", params);
+  const [platform, setPlatform] = useSearchParamsState("platform", params);
+  const [offset, setOffset] = useSearchParamsState("offset", params, 0);
 
   const { data: genders } = useFindAllGenders();
+  const { data: platforms } = useFindAllPlatforms();
 
   const {
     data: games,
     isLoading: gamesLoading,
     isError: gamesError,
   } = useSearchGames({
-    filter: searchText,
+    search,
     offset,
+    platform,
     gender,
   });
 
@@ -63,35 +73,55 @@ export default function Home() {
 
                 <input
                   className="w-full truncate bg-transparent"
-                  value={searchText}
-                  onChange={(e) => setSearchText(e.target.value)}
+                  value={search && search.length > 0 ? search : undefined}
+                  onChange={(e) => setSearch(e.target.value)}
                 />
               </p>
-
-              <div className="grow">
-                <ReactSearchAutocomplete
-                  className="z-10"
-                  items={
-                    genders?.map((gender) => ({
-                      id: gender.id,
-                      name: gender.name,
-                    })) || []
-                  }
-                  onSelect={(result) =>
-                    setGender(result.id.split("/").slice(-1)[0])
-                  }
-                />
-              </div>
             </div>
 
+            {advanced && (
+              <div className="flex flex-col gap-4">
+                <AdvancedSearch
+                  data={genders}
+                  placeholder="Genre"
+                  onSelect={(result) =>
+                    setGender(result?.value.split("/").slice(-1)[0] ?? "")
+                  }
+                  value={gender}
+                  z={11}
+                />
+
+                <AdvancedSearch
+                  data={platforms}
+                  placeholder="Platform"
+                  onSelect={(result) =>
+                    setPlatform(result?.value.split("/").slice(-1)[0] ?? "")
+                  }
+                  value={platform}
+                  z={10}
+                />
+              </div>
+            )}
+
             <div className="flex flex-col items-center justify-center gap-4 md:flex-row">
-              <a
-                href="/search"
+              <button
                 className="flex rounded-full border border-zinc-700 px-6 py-3 duration-300 hover:bg-white/10 hover:shadow-md hover:shadow-black"
+                style={{
+                  backgroundColor: advanced ? "#555555" : "transparent",
+                }}
+                onClick={() => {
+                  if (advanced) {
+                    setGender("");
+                    setPlatform("");
+                    setAdvanced(false);
+                  } else {
+                    setAdvanced(true);
+                  }
+                }}
               >
                 <FlameKindling className="mr-2 h-5 w-5" />
-                Rechercher
-              </a>
+                Recherche avancée
+              </button>
 
               <a
                 href="https://github.com/swordfatih/ChampIFgnon/"
@@ -149,18 +179,16 @@ export default function Home() {
           <button
             className="flex animate-bounce justify-center text-zinc-600 duration-150 hover:text-white"
             onClick={() => {
-              if (offset <= 0) {
-                setOffset(0);
-              } else {
-                setOffset(offset - 12);
-              }
+              offset !== undefined && setOffset(offset <= 0 ? 0 : offset - 12);
             }}
           >
             <ArrowLeftIcon strokeWidth={1} className="h-10 w-10" />
           </button>
           <button
             className="flex animate-bounce justify-center text-zinc-600 duration-150 hover:text-white"
-            onClick={() => setOffset(offset + 12)}
+            onClick={() => {
+              offset !== undefined && setOffset(offset + 12);
+            }}
           >
             <ArrowRightIcon strokeWidth={1} className="h-10 w-10" />
           </button>

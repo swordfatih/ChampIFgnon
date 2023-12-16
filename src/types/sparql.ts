@@ -28,12 +28,14 @@ export type SparRequest = {
   }[];
   langFilters?: SparLangFilter[];
   textFilters?: SparTextFilter[];
+  tripleFilters?: (SparTriple | undefined)[];
   limit?: number;
   offset?: number;
   groups?: string[];
   concats?: string[];
   binds?: SparBind[];
   distinct?: boolean;
+  search?: string;
 };
 
 export type SparResponse = {
