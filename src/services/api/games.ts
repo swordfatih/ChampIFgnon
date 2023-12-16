@@ -231,7 +231,7 @@ export function useFindCreators(id?: string, property?: string) {
       data?.results.bindings.map((result) => ({
         item: result.item.value,
         name: result.name.value,
-        person: result.type?.value !== undefined,
+        person: result.person?.value !== undefined,
       })),
   });
 }
