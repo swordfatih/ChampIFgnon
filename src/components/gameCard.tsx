@@ -53,6 +53,9 @@ export function GameCard({ game }: GameCardProps) {
           <p className="mt-2 text-sm text-gray-300 group-hover:text-white">
             {game.description}
           </p>
+          <p className="mt-2 text-sm text-gray-300 group-hover:text-white">
+            {game.score}
+          </p>
         </div>
       </div>
     </Link>

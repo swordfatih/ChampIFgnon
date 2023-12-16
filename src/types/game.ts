@@ -3,6 +3,7 @@ export type Game = {
   name: string;
   logo?: string;
   description: string;
+  score?: string;
 };
 
 export type Website = {

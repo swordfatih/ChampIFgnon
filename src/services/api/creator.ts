@@ -95,6 +95,7 @@ export function useFindBestGames(id?: string) {
         logo: game.logo?.value,
         website: game.website?.value,
         date: game.date?.value,
+        score: game.score?.value,
       })),
   });
 }
