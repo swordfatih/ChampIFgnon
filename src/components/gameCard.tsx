@@ -12,7 +12,7 @@ type GameCardProps = {
 export function GameCard({ game }: GameCardProps) {
   return (
     <Link
-      to={`http://localhost:5173/game/${game.id.split("/").slice(-1)}`}
+      to={`/game/${game.id.split("/").slice(-1)}`}
       className="card group relative h-48 w-full rounded-xl bg-zinc-700 shadow-md shadow-black outline-none before:absolute before:left-0 before:top-0 before:h-full before:w-full before:rounded-xl before:opacity-0 before:transition-opacity before:duration-500 after:absolute after:left-0 after:top-0 after:h-full after:w-full after:rounded-xl after:opacity-0 after:transition-opacity after:duration-500 hover:shadow-xl hover:shadow-black hover:brightness-50 hover:before:opacity-100"
     >
       <div
