@@ -19,6 +19,7 @@ async function findBestGames(id?: string) {
       "statement",
       "creator",
       "description",
+      "steamId",
     ],
     triples: [
       ["game", "wdt:P31", "wd:Q7889"],
@@ -37,6 +38,7 @@ async function findBestGames(id?: string) {
         ["statement", "ps:P444", "score"],
       ],
       [["game", "wdt:P154", "logo"]],
+      [["game", "wdt:P1733", "steamId"]],
     ],
     binds: [
       {
@@ -95,6 +97,7 @@ export function useFindBestGames(id?: string) {
         website: game.website?.value,
         date: game.date?.value,
         score: game.score?.value,
+        steamId: game.steamId?.value,
       })),
   });
 }

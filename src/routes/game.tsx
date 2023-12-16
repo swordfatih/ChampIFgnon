@@ -56,7 +56,19 @@ export default function Game() {
               <img className="h-full w-full" src={game?.logo} />
             </div>
           )}
-          {!game?.logo && (
+          {!game?.logo && game?.steamId && (
+            <div className="m-1 mb-3.5 h-1/2 w-1/2">
+              <img
+                className="h-full w-full"
+                src={
+                  "https://cdn.cloudflare.steamstatic.com/steam/apps/" +
+                  game.steamId +
+                  "/header.jpg"
+                }
+              />
+            </div>
+          )}
+          {!game?.logo && !game?.steamId && (
             <div className="m-1 mb-3.5 h-1/2 w-1/2">
               <img
                 className="h-full w-full"
@@ -66,6 +78,7 @@ export default function Game() {
           )}
 
           <div className="m-1 mb-3.5 h-1/2 w-1/2 flex-col p-2">
+            <p>debug : {game?.steamId}</p>
             {game?.website && (
               <div className="flex gap-2 text-xl text-gray-300 group-hover:text-white">
                 <p className="font-bold">website :</p>

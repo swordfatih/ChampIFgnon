@@ -12,13 +12,13 @@ import type { SparRequest, SparResponse } from "@/types/sparql";
 
 async function searchGames({ filter, gender, offset }: SearchGames) {
   const query: SparRequest = {
-    vars: ["id", "name", "logo", "description"],
+    vars: ["id", "name", "logo", "description", "steamId"],
     triples: [
       ["id", "wdt:P31", "wd:Q7889"],
       ["id", "rdfs:label", "name"],
       ["id", "schema:description", "description"],
     ],
-    optionals: [[["id", "wdt:P154", "logo"]]],
+    optionals: [[["id", "wdt:P154", "logo"]], [["id", "wdt:P1733", "steamId"]]],
     langFilters: [
       {
         value: "name",
@@ -65,6 +65,7 @@ export function useSearchGames(query: SearchGames) {
         id: game.id.value,
         description: game.description.value,
         logo: game.logo?.value,
+        steamId: game.steamId?.value,
       })),
   });
 }
@@ -85,6 +86,7 @@ async function findGame(id?: string) {
       "score",
       "critId",
       "statement",
+      "steamId",
     ],
     triples: [
       ["id", "rdfs:label", "?name"],
@@ -101,6 +103,7 @@ async function findGame(id?: string) {
         ["statement", "ps:P444", "score"],
         ["id", "wdt:P2864", "critId"],
       ],
+      [["id", "wdt:P1733", "steamId"]],
     ],
     binds: [
       {
@@ -151,6 +154,7 @@ export function useFindGame(id?: string) {
             date: game.date?.value,
             score: game.score?.value,
             critId: game.critId?.value,
+            steamId: game.steamId?.value,
           }
         : undefined;
     },
