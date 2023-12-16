@@ -20,7 +20,6 @@ import GameCard from "@/components/gameCard";
 
 export default function Home() {
   const featuresRef = React.useRef<HTMLDivElement>(null);
-  const cardWrapperRef = React.useRef<HTMLDivElement>(null);
 
   const [advanced, setAdvanced] = useState(false);
 
@@ -167,27 +166,6 @@ export default function Home() {
             (résultats de {offset} à {(offset ?? 0) + 12})
           </p>
         </h2>
-        {gamesLoading && (
-          <div className="flex w-full justify-center">
-            <div className="w-fit">
-              <InfinitySpin width="200" color="#f9f9f9" />
-            </div>
-          </div>
-        )}
-        {(gamesError || !games || games.length === 0) && !gamesLoading && (
-          <div className="flex w-full justify-center">
-            <div className="flex w-fit flex-col items-center justify-center text-center">
-              <BiMessageSquareError size={40} color="red" />
-              <p className="text-gray-400">Nothing found.</p>
-            </div>
-          </div>
-        )}
-        <div
-          ref={cardWrapperRef}
-          className="cards grid items-center gap-3 md:grid-cols-2 md:gap-6 lg:grid-cols-3"
-        >
-          {games?.map((game) => <GameCard key={game.id} game={game} />)}
-        </div>
         <div className="mt-12 flex items-center justify-center gap-12">
           <button
             className="flex animate-bounce justify-center text-zinc-600 duration-150 hover:text-white"
@@ -205,6 +183,24 @@ export default function Home() {
           >
             <ArrowRightIcon strokeWidth={1} className="h-10 w-10" />
           </button>
+        </div>
+        {gamesLoading && (
+          <div className="flex w-full justify-center">
+            <div className="w-fit">
+              <InfinitySpin width="200" color="#f9f9f9" />
+            </div>
+          </div>
+        )}
+        {(gamesError || !games || games.length === 0) && !gamesLoading && (
+          <div className="flex w-full justify-center">
+            <div className="flex w-fit flex-col items-center justify-center text-center">
+              <BiMessageSquareError size={40} color="red" />
+              <p className="text-gray-400">Nothing found.</p>
+            </div>
+          </div>
+        )}
+        <div className="cards grid items-center gap-3 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
+          {games?.map((game) => <GameCard key={game.id} game={game} />)}
         </div>
       </section>
 

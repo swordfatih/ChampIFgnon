@@ -1,4 +1,3 @@
-import { useEffect, useRef } from "react";
 import { MoveUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -9,48 +8,31 @@ type GameCardProps = {
 };
 
 export function GameCard({ game }: GameCardProps) {
-  const ref = useRef<HTMLAnchorElement>();
-
-  useEffect(() => {
-    if (ref?.current !== undefined) {
-      ref.current.onmousemove = (e) => {
-        if (ref?.current !== undefined) {
-          const rect = ref.current.getBoundingClientRect(),
-            x = e.clientX - rect.left,
-            y = e.clientY - rect.top;
-
-          ref.current.style.setProperty("--mouse-x", `${x}px`);
-          ref.current.style.setProperty("--mouse-y", `${y}px`);
-        }
-      };
-    }
-  }, [ref]);
-
   return (
     <Link
       to={`http://localhost:5173/game/${game.id.split("/").slice(-1)}`}
-      className="card group relative h-48 w-full rounded-xl bg-zinc-700 shadow-md shadow-black outline-none before:absolute before:left-0 before:top-0 before:h-full before:w-full before:rounded-xl before:opacity-0 before:transition-opacity before:duration-500 after:absolute after:left-0 after:top-0 after:h-full after:w-full after:rounded-xl after:opacity-0 after:transition-opacity after:duration-500 hover:shadow-xl hover:shadow-black hover:before:opacity-100"
+      className="card group relative h-48 w-full rounded-xl bg-zinc-700 shadow-md shadow-black outline-none before:absolute before:left-0 before:top-0 before:h-full before:w-full before:rounded-xl before:opacity-0 before:transition-opacity before:duration-500 after:absolute after:left-0 after:top-0 after:h-full after:w-full after:rounded-xl after:opacity-0 after:transition-opacity after:duration-500 hover:shadow-xl hover:shadow-black hover:brightness-50 hover:before:opacity-100"
     >
-      <div className="absolute inset-[1px] z-[2] flex flex-col gap-2.5 rounded-xl bg-[#141414] p-2.5">
+      <div
+        className="absolute inset-[1px] z-[2] flex flex-col gap-2.5 rounded-xl bg-[#141414] bg-contain p-2.5"
+        style={{
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(${
+            game.steamId
+              ? `https://cdn.cloudflare.steamstatic.com/steam/apps/${game.steamId}/header.jpg`
+              : game.logo
+          })`,
+          backgroundSize: "100% 100%",
+        }}
+      >
         <div className="relative h-full w-full overflow-hidden rounded-md p-4">
-          {game.logo && (
-            <div className="mb-3.5 h-14 w-14">
-              <img src={game.logo} />
-            </div>
-          )}
-          {!game.logo && game.steamId && (
-            <div className="mb-3.5 h-14 w-14">
-              <img
-                src={
-                  "https://cdn.cloudflare.steamstatic.com/steam/apps/" +
-                  game.steamId +
-                  "/capsule_184x69.jpg"
-                }
-              />
-            </div>
-          )}
           <h3 className="text-xl">
-            <div className="flex h-full w-full items-center after:absolute after:inset-0">
+            <div
+              className="flex h-full w-full items-center after:absolute after:inset-0"
+              style={{
+                textShadow:
+                  "0.07em 0 black, 0 0.07em black, -0.07em 0 black, 0 -0.07em black",
+              }}
+            >
               {game.name}
 
               <MoveUpRight
@@ -60,14 +42,23 @@ export function GameCard({ game }: GameCardProps) {
             </div>
           </h3>
 
-          <p className="mt-2 text-sm text-gray-300 group-hover:text-white">
+          <p
+            className="mt-2 text-sm text-gray-300 group-hover:text-white"
+            style={{
+              textShadow:
+                "0.07em 0 black, 0 0.07em black, -0.07em 0 black, 0 -0.07em black",
+            }}
+          >
             {game.description}
           </p>
-          <p className="mt-2 text-sm text-gray-300 group-hover:text-white">
+          <p
+            className="mt-2 text-sm text-gray-300 group-hover:text-white"
+            style={{
+              textShadow:
+                "0.07em 0 black, 0 0.07em black, -0.07em 0 black, 0 -0.07em black",
+            }}
+          >
             {game.score}
-          </p>
-          <p className="mt-2 text-sm text-gray-300 group-hover:text-white">
-            debug: {game.steamId}
           </p>
         </div>
       </div>
