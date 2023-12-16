@@ -5,13 +5,13 @@ import Person from "@/routes/person";
 import Quiz from "@/routes/quiz";
 import queryClient from "@/services/react-query";
 import { QueryClientProvider } from "react-query";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createHashRouter, RouterProvider } from "react-router-dom";
 
 import Error from "@/components/error";
 import PageLayout from "@/components/page-layout";
 import RootLayout from "@/components/root-layout";
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     element: <RootLayout />,
     errorElement: <Error />,

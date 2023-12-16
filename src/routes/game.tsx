@@ -76,7 +76,7 @@ export default function Game() {
               src={
                 getSteamImage(game?.steamId) ??
                 game?.logo ??
-                "/assets/not_found.jpg"
+                "/ChampIFgnon/assets/not_found.jpg"
               }
             />
           </div>
