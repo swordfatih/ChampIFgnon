@@ -8,7 +8,7 @@ const RootLayout = () => {
         <div className="flex w-full items-center justify-between p-4">
           <Link className="flex items-center justify-start gap-2" to="/">
             <img
-              src="/assets/logo.png"
+              src="/ChampIFgnon/assets/logo.png"
               alt="MIFcromania logo"
               height={25}
               width={25}

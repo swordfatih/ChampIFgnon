@@ -21,12 +21,12 @@ export function Rating({ value, color, size = 20 }: Props) {
         }}
       />
       <img
-        src="/assets/stars_empty.png"
+        src="/ChampIFgnon/assets/stars_empty.png"
         alt="star"
         className="absolute z-10 object-contain invert"
       />
       <img
-        src="/assets/stars_borders.png"
+        src="/ChampIFgnon/assets/stars_borders.png"
         alt="star"
         className="absolute z-10 object-contain"
       />
