@@ -124,6 +124,7 @@ export function format({
   distinct,
   unions,
   search,
+  random,
 }: SparRequest) {
   const generator = new Generator();
 
@@ -171,14 +172,37 @@ export function format({
     },
   }));
 
-  request.order = orders?.map((order) => ({
-    expression: {
-      termType: "Variable",
-      value: order.subject,
-      equals: () => true,
-    },
-    descending: order.descending,
-  }));
+  if (orders) {
+    if (!request.order || request.order?.length) {
+      request.order = [];
+    }
+
+    orders.forEach(
+      (order) =>
+        request.order?.push({
+          expression: {
+            termType: "Variable",
+            value: order.subject,
+            equals: () => true,
+          },
+          descending: order.descending,
+        })
+    );
+  }
+
+  if (random) {
+    if (!request.order || request.order?.length) {
+      request.order = [];
+    }
+
+    request.order?.push({
+      expression: {
+        type: "operation",
+        operator: "uuid",
+        args: [],
+      },
+    });
+  }
 
   request.where = [];
 

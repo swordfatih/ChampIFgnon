@@ -36,6 +36,7 @@ export type SparRequest = {
   binds?: SparBind[];
   distinct?: boolean;
   search?: string;
+  random?: boolean;
 };
 
 export type SparResponse = {

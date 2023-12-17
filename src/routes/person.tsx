@@ -15,7 +15,7 @@ export default function Person() {
   const cardWrapperRef = React.useRef<HTMLDivElement>(null);
 
   return (
-    <main className="layout min-h-screen w-full bg-black bg-fixed text-white selection:bg-white selection:text-black">
+    <>
       <section className="container px-4 py-12 md:px-6 md:pt-8 lg:pt-16 xl:pt-24">
         <div className="grid items-center gap-4">
           <div className="flex flex-col justify-center space-y-4 text-center">
@@ -40,10 +40,7 @@ export default function Person() {
           )}
           {!person?.image && (
             <div className="m-1 mb-3.5 h-1/2 w-1/3">
-              <img
-                className="h-full w-full"
-                src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fpicturesofmaidenhead.files.wordpress.com%2F2019%2F01%2Fimage-not-found.jpg&f=1&nofb=1&ipt=c7f29bbe09abe700f04cd1938142fdf590986b85187de4571b91d75adfde5afd&ipo=images"
-              />
+              <img className="h-full w-full" src="/assets/not_found.jpg" />
             </div>
           )}
 
@@ -98,6 +95,6 @@ export default function Person() {
         </div>
       </section>
       <section className="container px-4 py-12 md:px-6 md:pt-8 lg:pt-16 xl:pt-24"></section>
-    </main>
+    </>
   );
 }

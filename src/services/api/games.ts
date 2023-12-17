@@ -6,6 +6,7 @@ import type {
   Creator,
   Game,
   GameUniqueDetails,
+  RandomGame,
   SearchGames,
 } from "@/types/game";
 import type { SparRequest, SparResponse } from "@/types/sparql";
@@ -233,5 +234,57 @@ export function useFindCreators(id?: string, property?: string) {
         name: result.name.value,
         person: result.person?.value !== undefined,
       })),
+  });
+}
+
+async function findRandomGames() {
+  const query = format({
+    vars: ["id", "name", "date", "logo", "steamId", "description"],
+    triples: [
+      ["id", "wdt:P31", "wd:Q7889"],
+      ["id", "rdfs:label", "name"],
+      ["id", "wdt:P577", "date"],
+      ["id", "schema:description", "description"],
+      ["id", "wdt:P154", "logo"],
+      ["id", "wdt:P1733", "steamId"],
+    ],
+    langFilters: [
+      {
+        value: "name",
+        lang: "en",
+      },
+      {
+        value: "description",
+        lang: "en",
+      },
+    ],
+    limit: 100,
+  });
+
+  const { data } = await api.wikidata.get<SparResponse>("sparql", {
+    params: {
+      query,
+    },
+  });
+
+  return data;
+}
+
+export function useFindRandomGames() {
+  return useQuery({
+    queryKey: ["useFindRandomGames"],
+    queryFn: findRandomGames,
+    select: (data): RandomGame[] | undefined => {
+      const games = data.results.bindings;
+
+      return games.map((game) => ({
+        name: game.name.value,
+        id: game.id.value,
+        logo: game.logo?.value,
+        date: game.date.value,
+        steamId: game.steamId?.value,
+        description: game.description.value,
+      }));
+    },
   });
 }

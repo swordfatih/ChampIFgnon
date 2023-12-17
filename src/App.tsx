@@ -2,6 +2,7 @@ import Company from "@/routes/company";
 import Game from "@/routes/game";
 import Home from "@/routes/home";
 import Person from "@/routes/person";
+import Quiz from "@/routes/quiz";
 import queryClient from "@/services/react-query";
 import { QueryClientProvider } from "react-query";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
+      },
+      {
+        path: "/quiz",
+        element: <Quiz />,
       },
       {
         element: <PageLayout />,

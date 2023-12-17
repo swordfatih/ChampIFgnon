@@ -42,3 +42,7 @@ export type SearchGames = {
   filters?: SearchFilter[];
   offset?: number;
 };
+
+export type RandomGame = Game & {
+  date: string;
+};

@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
+import { generatePastelColor } from "@/lib/color";
+
 type Base = {
   item: string;
   name: string;
@@ -10,15 +12,6 @@ type PropertyListProps<T extends Base> = {
   data?: T[];
   render?: (item: T) => ReactNode;
 };
-
-function generatePastelColor() {
-  const R = Math.floor(Math.random() * 127 + 127);
-  const G = Math.floor(Math.random() * 127 + 127);
-  const B = Math.floor(Math.random() * 127 + 127);
-
-  const rgb = (R << 16) + (G << 8) + B;
-  return `#${rgb.toString(16)}`;
-}
 
 export function PropertyList<T extends Base>({
   title,
