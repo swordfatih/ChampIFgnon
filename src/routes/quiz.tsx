@@ -80,7 +80,7 @@ export default function Quiz() {
           </h1>
 
           <p className="mx-auto max-w-3xl text-sm text-zinc-200 sm:text-base md:text-xl">
-            Devinez la date de publication des jeux les plus connues !
+            Devinez les dates de publications des jeux les plus connus !
           </p>
 
           {gamesLoading && (
