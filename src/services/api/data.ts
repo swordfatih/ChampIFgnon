@@ -9,7 +9,7 @@ async function findAllProperty(property: string) {
       id: string;
       name: string;
     }[]
-  >(`${property}.json`);
+  >(`ChampIFgnon/${property}.json`);
 
   return data;
 }
