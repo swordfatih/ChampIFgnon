@@ -23,7 +23,7 @@ const wikidata = axios.create({
 });
 
 const local = axios.create({
-  baseURL: "/data/",
+  baseURL: "/ChampIFgnon/data/",
   headers: {
     "Content-Type": "application/json",
   },
