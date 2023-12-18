@@ -1,4 +1,4 @@
-import { useFindAllProperty } from "@/services/api/search";
+import { useFindAllProperty } from "@/services/api/data";
 import type { SetURLSearchParams } from "react-router-dom";
 
 import type { SearchFilter } from "@/types/search";
@@ -12,10 +12,10 @@ export function useFilters(
   const mechanism = useSearchParamsState("mechanism", params);
   const language = useSearchParamsState("language", params);
 
-  const { data: genres } = useFindAllProperty("P136");
-  const { data: platforms } = useFindAllProperty("P400");
-  const { data: mechanisms } = useFindAllProperty("P4151");
-  const { data: languages } = useFindAllProperty("P407", 30);
+  const { data: genres } = useFindAllProperty("genres");
+  const { data: platforms } = useFindAllProperty("platforms");
+  const { data: mechanisms } = useFindAllProperty("mechanisms");
+  const { data: languages } = useFindAllProperty("languages");
 
   const filters = [
     {
