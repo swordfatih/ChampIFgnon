@@ -70,7 +70,7 @@ export default function Game() {
 
       <section className="container px-4 py-12 md:px-2 md:pt-4 lg:pt-8 xl:pt-12">
         <div className="flex h-full w-full flex-col overflow-hidden rounded-md p-4 sm:flex-row">
-          <div className="m-1 mb-3.5 h-1/2 w-full overflow-hidden  rounded sm:w-1/2">
+          <div className="m-1 mb-3.5 h-1/2 w-full overflow-hidden rounded sm:w-1/2">
             <img
               className="h-full w-full object-cover "
               src={
