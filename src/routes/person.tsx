@@ -36,7 +36,7 @@ export default function Person() {
           <div className="m-1 mb-3.5 h-1/2 w-full overflow-hidden rounded sm:w-1/3">
             <img
               className="h-full w-full"
-              src={person?.image ?? "/assets/not_found.jpg"}
+              src={person?.image ?? "/ChampIFgnon/assets/not_found.jpg"}
             />
           </div>
 

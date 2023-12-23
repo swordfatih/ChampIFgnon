@@ -32,7 +32,7 @@ export default function Company() {
           <div className="m-1 mb-3.5 h-1/2 w-full overflow-hidden rounded sm:w-1/3">
             <img
               className="h-full w-full"
-              src={company?.logo ?? "/assets/not_found.jpg"}
+              src={company?.logo ?? "/ChampIFgnon/assets/not_found.jpg"}
             />
           </div>
 
