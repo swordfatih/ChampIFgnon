@@ -40,6 +40,12 @@ export default function Home() {
   });
 
   useEffect(() => {
+    if (filters && filters.some((value) => !!value.state[0])) {
+      setAdvanced(true);
+    }
+  }, [filters]);
+
+  useEffect(() => {
     const anchor = window.location.hash.slice(1);
 
     if (games && anchor) {

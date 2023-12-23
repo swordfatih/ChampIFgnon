@@ -10,9 +10,16 @@ export default function Company() {
   const { id } = useParams();
 
   const { data } = useSearchCompany(id!);
-  const company = data?.results.bindings[0];
   const { data: bestGames } = useFindBestGames(id);
   const cardWrapperRef = React.useRef<HTMLDivElement>(null);
+
+  const { data: dataNoLocation } = useSearchCompany(id!, false);
+
+  let company = data?.results.bindings[0];
+
+  if (!company?.name.value) {
+    company = dataNoLocation?.results.bindings[0];
+  }
 
   useEffect(() => {});
 
@@ -52,10 +59,12 @@ export default function Company() {
             </div>
           )}
 
-          <h3>
-            Company Location: {company?.hq_city.value},{" "}
-            {company?.hq_country.value}
-          </h3>
+          {company?.hq_city && (
+            <h3>
+              Company Location: {company?.hq_city.value},{" "}
+              {company?.hq_country.value}
+            </h3>
+          )}
         </div>
         <br />
         {bestGames && (
