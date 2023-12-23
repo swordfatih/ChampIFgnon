@@ -283,39 +283,100 @@ export function format({
     });
   });
 
-  langFilters?.forEach(({ value, lang }: SparLangFilter) => {
-    request.where?.push({
-      type: "filter",
-      expression: {
-        type: "operation",
-        operator: "=",
-        args: [
-          {
-            type: "operation",
-            operator: "lang",
-            args: [
-              {
-                termType: "Variable",
-                value,
+  langFilters
+    ?.filter((item) => !item.optional)
+    .forEach(({ value, lang }: SparLangFilter) => {
+      request.where?.push({
+        type: "filter",
+        expression: {
+          type: "operation",
+          operator: "=",
+          args: [
+            {
+              type: "operation",
+              operator: "lang",
+              args: [
+                {
+                  termType: "Variable",
+                  value,
+                  equals: () => true,
+                },
+              ],
+            },
+            {
+              termType: "Literal",
+              value: lang,
+              language: "",
+              datatype: {
+                termType: "NamedNode",
+                value: "http://www.w3.org/2001/XMLSchema#string",
                 equals: () => true,
               },
-            ],
-          },
-          {
-            termType: "Literal",
-            value: lang,
-            language: "",
-            datatype: {
-              termType: "NamedNode",
-              value: "http://www.w3.org/2001/XMLSchema#string",
               equals: () => true,
             },
-            equals: () => true,
-          },
-        ],
-      },
+          ],
+        },
+      });
     });
-  });
+
+  langFilters
+    ?.filter((item) => item.optional === true)
+    .forEach(({ value, lang }: SparLangFilter) => {
+      request.where?.push({
+        type: "filter",
+        expression: {
+          type: "operation",
+          operator: "||",
+          args: [
+            {
+              type: "operation",
+              operator: "!",
+              args: [
+                {
+                  type: "operation",
+                  operator: "bound",
+                  args: [
+                    {
+                      termType: "Variable",
+                      value,
+                      equals: () => true,
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              type: "operation",
+              operator: "=",
+              args: [
+                {
+                  type: "operation",
+                  operator: "lang",
+                  args: [
+                    {
+                      termType: "Variable",
+                      value,
+                      equals: () => true,
+                    },
+                  ],
+                },
+                {
+                  termType: "Literal",
+                  value: lang,
+                  language: "",
+                  datatype: {
+                    termType: "NamedNode",
+                    value: "http://www.w3.org/2001/XMLSchema#string",
+                    equals: () => true,
+                  },
+                  equals: () => true,
+                },
+              ],
+            },
+          ],
+        },
+      });
+    });
 
   textFilters?.forEach(({ value, filter, attributes }: SparTextFilter) => {
     request.where?.push({

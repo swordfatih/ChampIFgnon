@@ -67,7 +67,7 @@ export default function Person() {
 
         <div className="flex flex-col gap-4">
           {bestGames && (
-            <p className="center mx-2 text-xl font-bold text-gray-300 group-hover:text-white">
+            <p className="center mx-2 text-center text-xl font-bold text-gray-300 group-hover:text-white">
               Best three games
             </p>
           )}

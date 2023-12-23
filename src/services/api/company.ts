@@ -18,14 +18,32 @@ interface QueryObject {
   limit: number;
 }
 
-async function searchCompany(companyId: string, getLocation: boolean) {
+async function searchCompany(companyId?: string) {
+  if (companyId === undefined) {
+    return null;
+  }
+
   const queryObject: QueryObject = {
-    vars: ["item", "name", "logo", "inception", "website"],
+    vars: [
+      "item",
+      "name",
+      "logo",
+      "inception",
+      "website",
+      "hq_city",
+      "hq_country",
+    ],
     triples: [["item", "rdfs:label", "name"]],
     optionals: [
       [["item", "wdt:P154", "logo"]],
       [["item", "wdt:P571", "inception"]],
       [["item", "wdt:P856", "website"]],
+      [
+        ["item", "wdt:P159", "?hq_location"],
+        ["?hq_location", "rdfs:label", "hq_city"],
+        ["?hq_location", "wdt:P17", "?hq_countryId"],
+        ["?hq_countryId", "rdfs:label", "hq_country"],
+      ],
     ],
     binds: [
       {
@@ -38,30 +56,19 @@ async function searchCompany(companyId: string, getLocation: boolean) {
         value: "name",
         lang: "en",
       },
-    ],
-    limit: 1,
-  };
-
-  if (getLocation) {
-    queryObject.vars.push("hq_city", "hq_country");
-    queryObject.langFilters.push(
       {
         value: "hq_city",
         lang: "en",
+        optional: true,
       },
       {
         value: "hq_country",
         lang: "en",
-      }
-    );
-
-    queryObject.optionals.push([
-      ["item", "wdt:P159", "?hq_location"],
-      ["?hq_location", "rdfs:label", "hq_city"],
-      ["?hq_location", "wdt:P17", "?hq_countryId"],
-      ["?hq_countryId", "rdfs:label", "hq_country"],
-    ]);
-  }
+        optional: true,
+      },
+    ],
+    limit: 1,
+  };
 
   const query = format(queryObject);
 
@@ -74,12 +81,21 @@ async function searchCompany(companyId: string, getLocation: boolean) {
   return data;
 }
 
-export function useSearchCompany(
-  companyId: string,
-  getLocation: boolean = true
-) {
+export function useSearchCompany(companyId?: string) {
   return useQuery({
-    queryKey: ["useSearchCompany", companyId, getLocation],
-    queryFn: () => searchCompany(companyId, getLocation),
+    queryKey: ["useSearchCompany", companyId],
+    queryFn: () => searchCompany(companyId),
+    select: (data) => {
+      const company = data?.results.bindings[0];
+      return {
+        id: company?.item.value,
+        name: company?.name.value,
+        logo: company?.logo?.value,
+        inception: company?.inception?.value,
+        website: company?.website?.value,
+        city: company?.hq_city?.value,
+        country: company?.hq_country?.value,
+      };
+    },
   });
 }

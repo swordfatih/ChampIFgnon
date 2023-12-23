@@ -3,6 +3,7 @@ export type SparTriple = [string, string, string];
 export type SparLangFilter = {
   value: string;
   lang: string;
+  optional?: boolean;
 };
 
 export type SparTextFilter = {

@@ -1,12 +1,9 @@
-export type Location = {
-  city: string;
-  country: string;
-};
-
 export type Company = {
+  id: string;
   name: string;
-  logo: string;
-  inceptionDate: string;
-  website: string;
-  location: Location;
+  logo?: string;
+  inception?: string;
+  website?: string;
+  city?: string;
+  country?: string;
 };
