@@ -65,13 +65,12 @@ export default function Person() {
           </div>
         </div>
 
-        <div>
+        <div className="flex flex-col gap-4">
           {bestGames && (
             <p className="center mx-2 text-xl font-bold text-gray-300 group-hover:text-white">
               Best three games
             </p>
           )}
-          <br />
           <div className="cards grid items-center gap-3 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
             {bestGames?.map((game) => <GameCard key={game.id} game={game} />)}
           </div>
