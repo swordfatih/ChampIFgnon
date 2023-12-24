@@ -16,7 +16,7 @@ Clone the project:
 `git clone https://github.com/swordfatih/ChampIFgnon.git`
 
 Move to the project folder:
-`cd MIFcromania`
+`cd ChampIFgnon`
 
 Download packages:
 `npm install`
